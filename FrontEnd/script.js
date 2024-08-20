@@ -1,15 +1,15 @@
 //upload works on page
 async function getWorks() {
   try {
-    //wait reponse
-    const reponse = await fetch("http://localhost:5678/api/works");
+    //wait response
+    const response = await fetch("http://localhost:5678/api/works");
 
-    if (!reponse.ok) {
+    if (!response.ok) {
       throw new Error("Erreur lors de la récupération des travaux");
     }
 
     //transformation response in JSON
-    const works = await reponse.json();
+    const works = await response.json();
 
     //section gallery in HTML
     const sectionGallery = document.querySelector(".gallery");
