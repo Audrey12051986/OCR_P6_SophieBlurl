@@ -317,6 +317,10 @@ button {
   z-index: 2;
 }
 
+.modal[aria-hidden="false"] {
+  display: block; /* Affiche la modale lorsqu'elle n'est pas cachée */
+}
+
 .modalHeader {
   display: flex;
   flex-direction: row;

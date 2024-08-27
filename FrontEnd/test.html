@@ -12,22 +12,32 @@
     />
     <meta name="description" content="" />
     <link rel="stylesheet" href="./assets/style.css" />
-    <script src="galerie.js"></script>
+    <script type="module" src="script.js" defer></script>
     <script
       src="https://kit.fontawesome.com/5fcbfd7080.js"
       crossorigin="anonymous"
     ></script>
   </head>
   <body>
-    <aside class="modal">
+    <a href="modal1" class="js_modal">Ouvrir la boîte modale</a>
+    <aside
+      id="modal1"
+      class="modal"
+      aria-hidden="true"
+      role="dialog"
+      aria-labelledby="modalTitle"
+      aria-modal="false"
+    >
       <div class="modalWrapper" id="editGallery">
-        <div class="modalHeader"><i class="fa-solid fa-xmark"></i></div>
-        <h3 class="modalTitle">Galerie photo</h3>
+        <div class="modalHeader">
+          <i class="fa-regular fa-pen-to-square"></i>
+        </div>
+        <h3 id="modalTitle" class="modalTitle">Galerie photo</h3>
         <div class="modalContent"></div>
         <button id="addPictureBtn">Ajouter une photo</button>
         <a href="#" id="deleteGallery">Supprimer la galerie</a>
       </div>
-      <div class="modalWrapper" id="addPicture">
+      <!-- <div class="modalWrapper" id="addPicture">
         <div class="modalHeader">
           <i class="fa-solid fa-arrow-left"></i
           ><i class="fa-solid fa-xmark"></i>
@@ -62,15 +72,15 @@
           </form>
         </div>
         <input type="submit" id="valider" value="valider" />
-      </div>
+      </div>-->
     </aside>
     <header>
-      <h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
+      <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
       <nav>
         <ul>
-          <li><a href="index.html">projets</a></li>
+          <li>projets</li>
           <li>contact</li>
-          <li><a href="login.html" id="logBtn">login</a></li>
+          <li>login</li>
           <li><img src="./assets/icons/instagram.png" alt="Instagram" /></li>
         </ul>
       </nav>
@@ -101,8 +111,14 @@
       </section>
       <section id="portfolio">
         <h2>Mes Projets</h2>
-        <div class="filter"></div>
-        <div class="gallery"></div>
+
+        <div class="filter_container">
+          <!-- Galerie gérée par JavaScript -->
+        </div>
+
+        <div class="gallery">
+          <!-- Galerie gérée par JavaScript -->
+        </div>
       </section>
       <section id="contact">
         <h2>Contact</h2>

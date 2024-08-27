@@ -154,4 +154,16 @@ function adminUserMode() {
 
 // ****** Modal ****** //
 
+const openModal = function (e) {
+  e.preventDefault();
+  const target = document.querySelector("#" + e.target.getAttribute("href"));
+  target.style.display = "block";
+  target.removeAttribute("aria-hidden");
+  target.setAttribute("aria-modal", "true");
+};
+
+document.querySelectorAll(".js_modal").forEach((a) => {
+  a.addEventListener("click", openModal);
+});
+
 //Open Modal if token is found
