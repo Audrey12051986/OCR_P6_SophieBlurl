@@ -1,43 +1,28 @@
-document.getElementById("login_user_form").addEventListener("submit", (e) => {
+const form = document.getElementById("login_form");
+
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  let emailUser = document.getElementById("email");
-  let passwordUser = document.getElementById("password");
+  const data = new FormData(form);
+  console.log(data);
 
-  if (emailUser.value === "" || passwordUser.value === "") {
-    alert("Veuillez remplir tous les champs.");
-    return;
-  }
-
-  fetch("http://localhost:5678/api/users/login", {
+  const response = await fetch("http://localhost:5678/api/users/login", {
     method: "POST",
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
+      "Content-Type": "application/json;charset=utf-8",
     },
     body: JSON.stringify({
-      email: emailUser.value,
-      password: passwordUser.value,
+      email: data.get("email"),
+      password: data.get("password"),
     }),
-  })
-    .then((response) => {
-      console.log("Response received:", response);
+  });
 
-      if (response.status !== 200) {
-        return response.json().then((data) => {
-          //display error message
-          alert(data.message || "Email et / ou mot de passe erroné(s)");
-        });
-      } else {
-        return response.json().then((data) => {
-          sessionStorage.setItem("token", data.token);
-          window.location.replace("index.html");
-        });
-      }
-    })
+  if (response.ok) {
+    const result = await response.json();
 
-    .catch((error) => {
-      console.error("Erreur lors de la requête:", error);
-      alert("Une erreur est survenue. Veuillez réessayer plus tard.");
-    });
+    sessionStorage.setItem("token", result.token);
+    /*window.location = "index.html";*/
+    return;
+  }
+  document.getElementById("errorMessage").style.visibility = "visible";
 });

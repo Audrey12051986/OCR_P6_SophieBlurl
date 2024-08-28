@@ -1,32 +1,18 @@
-const sectionGallery = document.querySelector(".gallery");
 const filterContainer = document.querySelector(".filter_container");
-let listCategories = [];
 
 // ****** Gallery ****** //
 
-// Function to fetch and display works
-async function getWorks() {
-  sectionGallery.innerHTML = ""; // Clear the gallery
-
+// Function to fetch works
+async function fetchWorks() {
   try {
     const response = await fetch("http://localhost:5678/api/works");
     if (!response.ok)
       throw new Error("Erreur lors de la récupération des travaux");
-
-    const works = await response.json();
-    displayWorks(works);
-    setupFilters(works);
+    return await response.json();
   } catch (error) {
     console.error("Erreur", error);
+    return []; // In case of error, return an empty list
   }
-}
-
-// Function to display works
-function displayWorks(works) {
-  works.forEach((work) => {
-    const workElement = createWorkElement(work);
-    sectionGallery.appendChild(workElement);
-  });
 }
 
 // Function to create a work element
@@ -47,32 +33,61 @@ function createWorkElement(work) {
   return workElement;
 }
 
+// Function to display works
+function displayWorks(works, container) {
+  container.innerHTML = ""; // Clear the gallery
+
+  works.forEach((work) => {
+    const workElement = createWorkElement(work);
+    container.appendChild(workElement);
+  });
+}
+
+// Function to initialize the gallery
+async function initGallery(sectionGallery) {
+  const works = await fetchWorks();
+  displayWorks(works, sectionGallery);
+  setupFilters(works);
+}
+
+// Intialisation
+const sectionGallery = document.querySelector(".gallery");
+initGallery(sectionGallery);
+
 // ****** Filters ****** //
 
 // Function to setup filters
-function setupFilters(works) {
-  const categories = getCategories(works);
+async function setupFilters(works) {
+  const categories = await fetchCategories();
   categoryFilter(categories, filterContainer);
   addCategoryListener(works);
 }
 
-// Function to get unique categories from works
-function getCategories(works) {
-  const categorySet = new Set();
-  works.forEach((work) => {
-    categorySet.add(work.category.name);
-  });
-  return Array.from(categorySet);
+// Function to fetch filter by categories
+async function fetchCategories() {
+  try {
+    const response = await fetch("http://localhost:5678/api/categories");
+    if (!response.ok)
+      throw new Error("Erreur lors de la récupération des catégories");
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur", error);
+    return []; // In case of error, return an empty list
+  }
 }
 
 // Function to create filter buttons
 function categoryFilter(categories, filterContainer) {
+  filterContainer.innerHTML = ""; // Clear previous buttons
+
+  // Create "Tous" button
   const allButton = document.createElement("button");
   allButton.innerText = "Tous";
-  allButton.className = "filterButton";
-  allButton.dataset.category = "Tous";
+  allButton.className = "filter_btn filter_btn--active";
+  allButton.dataset.categoryId = "0"; // ID for "Tous"
   filterContainer.appendChild(allButton);
 
+  // Create buttons for each category
   categories.forEach((category) => {
     createButtonFilter(category, filterContainer);
   });
@@ -81,34 +96,35 @@ function categoryFilter(categories, filterContainer) {
 // Function to create a single filter button
 function createButtonFilter(category, filterContainer) {
   const button = document.createElement("button");
-  button.innerText = category;
-  button.className = "filterButton";
-  button.dataset.category = category;
+  button.innerText = category.name;
+  button.className = "filter_btn";
+  button.dataset.categoryId = category.id;
   filterContainer.appendChild(button);
 }
 
 // Function to add listeners to filter buttons
 function addCategoryListener(works) {
-  const buttons = document.querySelectorAll(".filterButton");
+  const buttons = document.querySelectorAll(".filter_btn");
   buttons.forEach((button) => {
     button.addEventListener("click", () => {
-      filterWorks(button.dataset.category, works);
+      document.querySelectorAll(".filter_btn").forEach((btn) => {
+        btn.classList.remove("filter_btn--active");
+      });
+      button.classList.add("filter_btn--active");
+      filterWorks(button.dataset.categoryId, works);
     });
   });
 }
 
 // Function to filter works based on category
-function filterWorks(category, works) {
-  sectionGallery.innerHTML = ""; // Clear current gallery
+function filterWorks(categoryId, works) {
+  const sectionGallery = document.querySelector(".gallery"); // Use the correct selector
   const filteredWorks =
-    category === "Tous"
+    categoryId === "0"
       ? works
-      : works.filter((work) => work.category.name === category);
-  displayWorks(filteredWorks);
+      : works.filter((work) => work.category.id === parseInt(categoryId));
+  displayWorks(filteredWorks, sectionGallery);
 }
-
-// Call the function to fetch and display works
-getWorks();
 
 // ****** Admin Mode ****** //
 
