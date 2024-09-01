@@ -19,7 +19,7 @@
     ></script>
   </head>
   <body>
-    <a href="modal1" class="js_modal">Ouvrir la boîte modale</a>
+    <a href="#" class="js_modal">Ouvrir la boîte modale</a>
     <aside
       id="modal1"
       class="modal"
@@ -31,10 +31,39 @@
       <div class="modalWrapper" id="editGallery">
         <div class="modalHeader">
           <i class="fa-regular fa-pen-to-square"></i>
+          <button class="closeModalItem">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </div>
         <h3 id="modalTitle" class="modalTitle">Galerie photo</h3>
-        <div class="modalContent"></div>
+        <div class="modalContent">
+          <!--Existing picture gallery-->
+          <div class="galleryModdal"></div>
+        </div>
         <button id="addPictureBtn">Ajouter une photo</button>
+
+        <!-- New project form -->
+        <form id="addProjectForm">
+          <label for="title">Titre du projet :</label>
+          <input type="text" id="title" name="title" required />
+
+          <label for="image">Image :</label>
+          <input
+            type="file"
+            id="image"
+            name="image"
+            accept="image/*"
+            required
+          />
+
+          <label for="category">Catégorie :</label>
+          <select name="category" id="category" required>
+            <!-- Options will be added dynamically via JavaScript -->
+          </select>
+
+          <button type="submit">Ajouter</button>
+        </form>
+
         <a href="#" id="deleteGallery">Supprimer la galerie</a>
       </div>
     </aside>
@@ -46,10 +75,15 @@
             <a href="index.html#portfolio" class="link_header">projets</a>
           </li>
           <li><a href="index.html#contact" class="link_header">contact</a></li>
-          <li><a href="login.html" class="link_header">login</a></li>
+          <li>
+            <a id="logBtn" href="login.html" class="link_header">login</a>
+          </li>
           <li>
             <a href="#" class="link_header"
-              ><img src="assets/icons/instagram.png" alt="Instagram"
+              ><img
+                src="assets/icons/instagram.png"
+                alt="Instagram"
+                class="link_insta"
             /></a>
           </li>
         </ul>
@@ -80,12 +114,11 @@
         </article>
       </section>
       <section id="portfolio">
-        <h2>Mes Projets</h2>
+        <div class="editionMode">
+          <h2>Mes Projets</h2>
 
-        <button class="edit-btn">
-          <i class="fa-regular fa-pen-to-square">modifier</i>
-        </button>
-
+          <!-- Dynamically managed edit button with js-->
+        </div>
         <div class="filter_container">
           <ul class="filter_buttons" id="filterContainer">
             <!-- Les boutons de filtre seront ajoutés ici dynamiquement par JS -->
@@ -93,7 +126,7 @@
         </div>
 
         <div class="gallery">
-          <!-- Galerie gérée par JavaScript -->
+          <!-- La galerie est gérée dynamiquement par JavaScript -->
         </div>
       </section>
       <section id="contact">

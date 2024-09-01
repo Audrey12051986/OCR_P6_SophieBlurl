@@ -308,22 +308,43 @@ table {
   margin: 0;
   font-family: "Work Sans";
 }
+
+/*#introduction figure .editBtn {
+  margin-left: 4em;
+}*/
+
+.editionMode {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
 .editBtn {
+  border: none;
+  background-color: transparent;
+  padding: 15px 0;
+}
+.editBtn {
+  border: none;
+  background-color: transparent;
   padding: 15px 0;
 }
 .editBtn:hover {
   cursor: pointer;
 }
-
-#introduction figure .editBtn {
-  margin-left: 4em;
+.editBtn:hover {
+  cursor: pointer;
 }
 
-#portfolio .editBtn {
-  position: absolute;
-  top: 0.6em;
-  padding: 0;
-  left: 60%;
+#portfolio .edit_btn {
+  display: flex;
+  align-items: center;
+  border: none;
+  background-color: transparent;
+  color: #000000; /* Couleur du texte noir */
+  font-family: "Work Sans", sans-serif;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 /** modal **/

@@ -1,5 +1,3 @@
-const filterContainer = document.querySelector(".filter_container");
-
 // ****** Gallery ****** //
 
 // Function to fetch works
@@ -33,13 +31,12 @@ function createWorkElement(work) {
   return workElement;
 }
 
-// Function to display works
-function displayWorks(works, container) {
-  container.innerHTML = ""; // Clear the gallery
-
+// Function to display works in the gallery
+function displayWorks(works, sectionGallery) {
+  sectionGallery.innerHTML = ""; // Clear previous works
   works.forEach((work) => {
     const workElement = createWorkElement(work);
-    container.appendChild(workElement);
+    sectionGallery.appendChild(workElement);
   });
 }
 
@@ -50,14 +47,11 @@ async function initGallery(sectionGallery) {
   setupFilters(works);
 }
 
-// Intialisation
-const sectionGallery = document.querySelector(".gallery");
-initGallery(sectionGallery);
-
 // ****** Filters ****** //
 
 // Function to setup filters
 async function setupFilters(works) {
+  const filterContainer = document.querySelector(".filter_container");
   const categories = await fetchCategories();
   categoryFilter(categories, filterContainer);
   addCategoryListener(works);
@@ -118,13 +112,17 @@ function addCategoryListener(works) {
 
 // Function to filter works based on category
 function filterWorks(categoryId, works) {
-  const sectionGallery = document.querySelector(".gallery"); // Use the correct selector
-  const filteredWorks =
-    categoryId === "0"
-      ? works
-      : works.filter((work) => work.category.id === parseInt(categoryId));
+  const sectionGallery = document.querySelector(".gallery");
+  const filteredWorks = works.filter((work) =>
+    categoryId === "0" ? true : work.category.id === parseInt(categoryId)
+  );
   displayWorks(filteredWorks, sectionGallery);
+  console.log(filteredWorks); // Debugging output to check the filtered works
 }
+
+// Intialisation
+const sectionGallery = document.querySelector(".gallery");
+initGallery(sectionGallery);
 
 // ****** Admin Mode ****** //
 
@@ -134,52 +132,139 @@ function adminUserMode() {
   //Verification token presence and valid
   if (token && token.length === 143) {
     // Mask filters
-    const filterElement = document.querySelector(".filter");
+    const filterElement = document.querySelector(".filter_container");
     if (filterElement) filterElement.style.display = "none";
 
     // Change longin en logout
-    const logBtn = document.getElementById("logBtn");
-    if (logBtn) logBtn.innerText = "Logout";
+    const logBtn = document.querySelector("nav ul li:nth-child(3) a");
+    if (logBtn) {
+      logBtn.innerText = "Logout";
+      logBtn.addEventListener("click", () => {
+        sessionStorage.removeItem("token");
+        window.location.reload();
+      });
+    }
 
     // Create and insert admin menu
     const body = document.querySelector("body");
     const topMenu = document.createElement("div");
     topMenu.className = "topMenu";
     topMenu.innerHTML =
-      '<p><i class="fa-regular fa-pen-to-square"></i> Mode édition</p><button>Publier les changements</button>';
+      '<p><i class="fa-regular fa-pen-to-square"></i> Mode édition</p>';
     body.insertAdjacentElement("afterbegin", topMenu);
 
     // Add button "modifier"
-    const editBtnHtml =
-      '<p class="editBtn"><i class="fa-regular fa-pen-to-square"></i> Modifier</p>';
-    const sectionsToEdit = [
-      "#introduction img",
-      "#introduction article",
-      "#portfolio h2",
-    ];
+    const sectionsToEdit = ["#portfolio h2"];
     sectionsToEdit.forEach((selector) => {
       const element = document.querySelector(selector);
-      if (element) element.insertAdjacentHTML("afterend", editBtnHtml);
+      if (element) {
+        const editBtn = document.createElement("button");
+        editBtn.className = "edit_btn";
+        editBtn.innerHTML =
+          '<i class="fa-regular fa-pen-to-square"></i> modifier';
+        element.insertAdjacentElement("afterend", editBtn);
+      }
     });
 
     // Open modal with eventlistener
-    const portfolioTitle = document.querySelector("#portfolio h2"); // Correction du sélecteur
-    if (portfolioTitle) portfolioTitle.addEventListener("click", openModal);
+    const editButtons = document.querySelectorAll(".edit-btn");
+    editButtons.forEach((btn) => {
+      btn.addEventListener("click", openModal);
+    });
   }
 }
 
+// Call function adminUserMode
+adminUserMode();
+
 // ****** Modal ****** //
 
-const openModal = function (e) {
-  e.preventDefault();
-  const target = document.querySelector("#" + e.target.getAttribute("href"));
-  target.style.display = "block";
-  target.removeAttribute("aria-hidden");
-  target.setAttribute("aria-modal", "true");
-};
+function openModal(event) {
+  event.preventDefault(); // Prevents default behavior of link or button
+  const modal = document.getElementById("modal1");
+  if (modal) {
+    modal.style.display = "block";
+    modal.setAttribute("aria-hidden", "false");
+    modal.setAttribute("aria-modal", "true");
+  }
+}
 
-document.querySelectorAll(".js_modal").forEach((a) => {
-  a.addEventListener("click", openModal);
+function closeModal() {
+  const modal = document.getElementById("modal1");
+  if (modal) {
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden", "true");
+    modal.setAttribute("aria-modal", "false");
+  }
+}
+
+// Added event listener for edit buttons
+const editButtons = document.querySelectorAll(".edit_btn");
+editButtons.forEach((btn) => {
+  btn.addEventListener("click", openModal);
 });
 
+// Close the modal by clicking outside the content area
+document.getElementById("modal1").addEventListener("click", (e) => {
+  if (e.target === document.getElementById("modal1")) {
+    closeModal();
+  }
+});
+/*
+//Removing existing work
+async function deleteWork(workId) {
+  try {
+    const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+    if (!response.ok)
+      throw new Error("Erreur lors de la suppression du travail");
+    document.querySelector(`[data-id='${workId}']`).remove(); // DOM update
+  } catch (error) {
+    console.error("Erreur", error);
+  }
+}
+
+document.querySelectorAll(".delete-icon").forEach((icon) => {
+  icon.addEventListener("click", (e) => {
+    const workId = e.target.closest("figure").dataset.id;
+    deleteWork(workId);
+  });
+});
+
+//Add a new project via the modal form
+document.getElementById("addPictureBtn").addEventListener("click", async () => {
+  const formData = new FormData();
+  formData.append("title", document.getElementById("title").value);
+  formData.append("image", document.getElementById("image").files[0]);
+  formData.append("category", document.getElementById("category").value);
+
+  try {
+    const response = await fetch("http://localhost:5678/api/works", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) throw new Error("Erreur lors de l'ajout du travail");
+    const newWork = await response.json();
+    addWorkToGallery(newWork); // Mise à jour du DOM
+  } catch (error) {
+    console.error("Erreur", error);
+  }
+});
+
+//Add DOM
+function addWorkToGallery(work) {
+  const sectionGallery = document.querySelector(".gallery");
+  const workElement = createWorkElement(work);
+  sectionGallery.appendChild(workElement);
+}
+
 //Open Modal if token is found
+*/
