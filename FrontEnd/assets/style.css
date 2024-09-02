@@ -340,9 +340,11 @@ table {
   cursor: pointer;
 }
 
-#portfolio .edit_btn {
+#portfolio .edit_btn,
+.closeModalItem {
   display: flex;
   align-items: center;
+  gap: 10px;
   border: none;
   background-color: transparent;
   color: #000000; /* Couleur du texte noir */
@@ -355,7 +357,7 @@ table {
 
 .modal {
   position: fixed;
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   top: 0;
@@ -363,7 +365,7 @@ table {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.3);
-  z-index: 1;
+  /*z-index: 1;*/
 }
 
 .modal_container {
@@ -389,10 +391,21 @@ table {
   display: flex;
   flex-direction: row;
   width: 100%;
+  justify-content: flex-end;
 }
 
-#editGallery .modalHeader {
-  justify-content: flex-end;
+.modalHeader i {
+  display: none;
+}
+
+.modalContent {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 colonnes uniformes */
+  gap: 10px;
+  width: 100%;
+  padding-bottom: 47px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #b3b3b3;/
 }
 
 .modal i {
@@ -412,14 +425,13 @@ table {
   padding-bottom: 47px;
 }
 
-#editGallery .modalContent {
+/*#editGallery .modalContent {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-auto-rows: 1fr;
   grid-column-gap: 8px;
   grid-row-gap: 10px;
-}
-
+}*/
 /** end reset css**/
 body {
   max-width: 1140px;
@@ -549,6 +561,7 @@ li:hover {
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
+#addPictureBtn,
 input[type="submit"] {
   font-family: "Syne";
   font-weight: 700;
@@ -558,10 +571,22 @@ input[type="submit"] {
   width: 180px;
   text-align: center;
   border-radius: 60px;
+  border: none;
 }
 
 footer nav ul {
   display: flex;
   justify-content: flex-end;
   margin: 2em;
+}
+
+@media (max-width: 768px) {
+  .modal_container {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .modalContent {
+    grid-template-columns: repeat(2, 1fr); /* Deux colonnes sur mobile */
+  }
 }

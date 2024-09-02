@@ -226,60 +226,39 @@ function attachEditButtonListeners() {
 
 loginUser();
 
-// Modal related functions
-function openModal(event) {
-  event.preventDefault();
-  const modal = document.getElementById("modal1");
-  if (modal) {
-    modal.style.display = "block";
-    modal.setAttribute("aria-hidden", "false");
-    modal.setAttribute("aria-modal", "true");
-  }
-}
-
-/*
-function closeModal() {
-  const modal = document.getElementById("modal1");
-  if (modal) {
-    modal.style.display = "none";
-    modal.setAttribute("aria-hidden", "true");
-    modal.setAttribute("aria-modal", "false");
-  }
-}
-
-function setupModalCloseListener() {
-  const modal = document.getElementById("modal1");
-  if (modal) {
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        closeModal();
-      }
-    });
-  }
-}
-
-// Initialize modal close listener when the page is loaded
-setupModalCloseListener();
-
 // ****** Modal ****** //
 
 //Open modal
-/*function openModal(event) {
-  event.preventDefault(); // Prevents default behavior of link or button
+async function openModal(event) {
+  event.preventDefault();
+
   const modal = document.getElementById("modal1");
+  const openModalIcon = document.querySelector(".js_openModalIcon");
+
   if (modal) {
     modal.style.display = "block";
     modal.setAttribute("aria-hidden", "false");
     modal.setAttribute("aria-modal", "true");
+
+    //Fetch and display works in the modal
+    const works = await fetchWorks();
+    displayWorksModal(works);
   }
 }
 
+//Close modal
 function closeModal() {
   const modal = document.getElementById("modal1");
+  const openModalIcon = document.querySelector(".js_openModalIcon");
+
   if (modal) {
     modal.style.display = "none";
     modal.setAttribute("aria-hidden", "true");
     modal.setAttribute("aria-modal", "false");
+
+    if (openModalIcon) {
+      openModalIcon.style.display = "inline";
+    }
   }
 }
 
@@ -291,24 +270,64 @@ function setupModalCloseListener() {
         closeModal();
       }
     });
+    const closeModalButton = document.querySelector(".closeModalItem");
+    if (closeModalButton) {
+      closeModalButton.addEventListener("click", closeModal);
+    }
   }
 }
 
-// Initialize modal close listener when the page is loaded
-/*setupModalCloseListener();*/
-
-/*// Added event listener for edit buttons
-const editButtons = document.querySelectorAll(".edit_btn");
-editButtons.forEach((btn) => {
-  btn.addEventListener("click", openModal);
-});
-
-// Close the modal by clicking outside the content area
-document.getElementById("modal1").addEventListener("click", (e) => {
-  if (e.target === document.getElementById("modal1")) {
-    closeModal();
+//Function to display works in the modal gallery
+function displayWorksModal(works) {
+  const modalGallery = document.querySelector(".galleryModal");
+  if (modalGallery) {
+    modalGallery.innerHTML = "";
+    works.forEach((work) => {
+      const workElement = createWorkElement(work);
+      modalGallery.appendChild(workElement);
+    });
   }
+}
+console.log(displayWorksModal);
+
+// Initialize the gallery and modal setup when the page is loaded
+document.addEventListener("DOMContentLoaded", () => {
+  const sectionGalleryModal = document.querySelector(".galleryModal");
+  if (sectionGalleryModal) {
+    initGallery(sectionGalleryModal);
+  }
+  setupModalCloseListener();
+
+  // Add event listeners for opening the modal
+  document.querySelectorAll(".js_modal").forEach((el) => {
+    el.addEventListener("click", openModal);
+  });
 });
+
+/*//Add DOM
+function addWorkToGallery(work) {
+  const sectionGallery = document.querySelector(".gallery");
+  const workElement = createWorkElement(work);
+  sectionGallery.appendChild(workElement);
+}
+
+//Removing existing work
+async function deleteWork(workId) {
+  try {
+    const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+    if (!response.ok)
+      throw new Error("Erreur lors de la suppression du travail");
+    document.querySelector(`[data-id='${workId}']`).remove(); // DOM update
+  } catch (error) {
+    console.error("Erreur", error);
+  }
+}*/
+
 /*
 //Removing existing work
 async function deleteWork(workId) {
@@ -365,5 +384,4 @@ function addWorkToGallery(work) {
   sectionGallery.appendChild(workElement);
 }
 
-//Open Modal if token is found
 */

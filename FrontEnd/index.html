@@ -20,6 +20,7 @@
   </head>
   <body>
     <a href="#" class="js_modal">Ouvrir la boîte modale</a>
+    <i class="fa-regular fa-pen-to-square js_openModalIcon"></i>
     <aside
       id="modal1"
       class="modal"
@@ -28,9 +29,8 @@
       aria-labelledby="modalTitle"
       aria-modal="false"
     >
-      <div class="modal_ontainer" id="editGallery">
+      <div class="modal_container" id="editGallery">
         <div class="modalHeader">
-          <i class="fa-regular fa-pen-to-square"></i>
           <button class="closeModalItem">
             <i class="fa-solid fa-xmark"></i>
           </button>
@@ -38,11 +38,12 @@
         <h3 id="modalTitle" class="modalTitle">Galerie photo</h3>
         <div class="modalContent">
           <!--Existing picture gallery-->
-          <div class="galleryModdal"></div>
+          <div class="galleryModal"><!--Existing picture gallery--></div>
         </div>
         <button id="addPictureBtn">Ajouter une photo</button>
 
         <!-- New project form -->
+        <!--
         <form id="addProjectForm">
           <label for="title">Titre du projet :</label>
           <input type="text" id="title" name="title" required />
@@ -58,13 +59,13 @@
 
           <label for="category">Catégorie :</label>
           <select name="category" id="category" required>
-            <!-- Options will be added dynamically via JavaScript -->
+             Options will be added dynamically via JavaScript 
           </select>
 
           <button type="submit">Ajouter</button>
-        </form>
+        </form>-->
 
-        <a href="#" id="deleteGallery">Supprimer la galerie</a>
+        <!--<a href="#" id="deleteGallery">Supprimer la galerie</a>-->
       </div>
     </aside>
     <header>
