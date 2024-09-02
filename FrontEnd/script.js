@@ -126,61 +126,145 @@ initGallery(sectionGallery);
 
 // ****** Admin Mode ****** //
 
+//Call function after connexion ok
+async function loginUser() {
+  const email = "sophie.bluel@test.tld";
+  const password = "S0phie";
+
+  try {
+    const response = await fetch("http://localhost:5678/api/users/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Login failed");
+    }
+
+    const data = await response.json();
+    const token = data.token;
+
+    //Store the token in sessionStorage
+    sessionStorage.setItem("token", token);
+
+    // Call function adminUserMode
+    adminUserMode();
+  } catch (error) {
+    console.error("Erreur lors de la connexion :", error);
+  }
+}
+
 function adminUserMode() {
   const token = sessionStorage.getItem("token");
 
-  //Verification token presence and valid
-  if (token && token.length === 143) {
-    // Mask filters
-    const filterElement = document.querySelector(".filter_container");
-    if (filterElement) filterElement.style.display = "none";
+  if (isValidToken(token)) {
+    hideFilters();
+    configureLogoutButton();
+    createAdminMenu();
+    addEditButtons();
+    attachEditButtonListeners();
+  }
+}
 
-    // Change longin en logout
-    const logBtn = document.querySelector("nav ul li:nth-child(3) a");
-    if (logBtn) {
-      logBtn.innerText = "Logout";
-      logBtn.className = "link_header link_active";
-      logBtn.addEventListener("click", () => {
-        sessionStorage.removeItem("token");
-        window.location.reload();
-      });
+function isValidToken(token) {
+  return !!token;
+}
+
+function hideFilters() {
+  const filterElement = document.querySelector(".filter_container");
+  if (filterElement) {
+    filterElement.style.display = "none";
+  }
+}
+
+function configureLogoutButton() {
+  const logBtn = document.querySelector("nav ul li:nth-child(3) a");
+  if (logBtn) {
+    logBtn.innerText = "Logout";
+    logBtn.className = "link_header link_active";
+    logBtn.addEventListener("click", handleLogout);
+  }
+}
+
+function handleLogout() {
+  sessionStorage.removeItem("token");
+  window.location.reload();
+}
+
+function createAdminMenu() {
+  const body = document.querySelector("body");
+  const topMenu = document.createElement("div");
+  topMenu.className = "topMenu";
+  topMenu.innerHTML =
+    '<p><i class="fa-regular fa-pen-to-square"></i> Mode édition</p>';
+  body.insertAdjacentElement("afterbegin", topMenu);
+}
+
+function addEditButtons() {
+  const sectionsToEdit = ["#portfolio h2"];
+  sectionsToEdit.forEach((selector) => {
+    const element = document.querySelector(selector);
+    if (element) {
+      const editBtn = document.createElement("button");
+      editBtn.className = "edit_btn";
+      editBtn.innerHTML =
+        '<i class="fa-regular fa-pen-to-square"></i> modifier';
+      element.insertAdjacentElement("afterend", editBtn);
     }
+  });
+}
 
-    // Create and insert admin menu
-    const body = document.querySelector("body");
-    const topMenu = document.createElement("div");
-    topMenu.className = "topMenu";
-    topMenu.innerHTML =
-      '<p><i class="fa-regular fa-pen-to-square"></i> Mode édition</p>';
-    body.insertAdjacentElement("afterbegin", topMenu);
+function attachEditButtonListeners() {
+  const editButtons = document.querySelectorAll(".edit_btn");
+  editButtons.forEach((btn) => {
+    btn.addEventListener("click", openModal);
+  });
+}
 
-    // Add button "modifier"
-    const sectionsToEdit = ["#portfolio h2"];
-    sectionsToEdit.forEach((selector) => {
-      const element = document.querySelector(selector);
-      if (element) {
-        const editBtn = document.createElement("button");
-        editBtn.className = "edit_btn";
-        editBtn.innerHTML =
-          '<i class="fa-regular fa-pen-to-square"></i> modifier';
-        element.insertAdjacentElement("afterend", editBtn);
+loginUser();
+
+// Modal related functions
+function openModal(event) {
+  event.preventDefault();
+  const modal = document.getElementById("modal1");
+  if (modal) {
+    modal.style.display = "block";
+    modal.setAttribute("aria-hidden", "false");
+    modal.setAttribute("aria-modal", "true");
+  }
+}
+
+/*
+function closeModal() {
+  const modal = document.getElementById("modal1");
+  if (modal) {
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden", "true");
+    modal.setAttribute("aria-modal", "false");
+  }
+}
+
+function setupModalCloseListener() {
+  const modal = document.getElementById("modal1");
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        closeModal();
       }
-    });
-
-    // Open modal with eventlistener
-    const editButtons = document.querySelectorAll(".edit-btn");
-    editButtons.forEach((btn) => {
-      btn.addEventListener("click", openModal);
     });
   }
 }
 
-// Call function adminUserMode
-adminUserMode();
+// Initialize modal close listener when the page is loaded
+setupModalCloseListener();
 
 // ****** Modal ****** //
 
-function openModal(event) {
+//Open modal
+/*function openModal(event) {
   event.preventDefault(); // Prevents default behavior of link or button
   const modal = document.getElementById("modal1");
   if (modal) {
@@ -199,7 +283,21 @@ function closeModal() {
   }
 }
 
-// Added event listener for edit buttons
+function setupModalCloseListener() {
+  const modal = document.getElementById("modal1");
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+  }
+}
+
+// Initialize modal close listener when the page is loaded
+/*setupModalCloseListener();*/
+
+/*// Added event listener for edit buttons
 const editButtons = document.querySelectorAll(".edit_btn");
 editButtons.forEach((btn) => {
   btn.addEventListener("click", openModal);
