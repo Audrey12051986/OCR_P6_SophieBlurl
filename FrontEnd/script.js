@@ -139,6 +139,7 @@ function adminUserMode() {
     const logBtn = document.querySelector("nav ul li:nth-child(3) a");
     if (logBtn) {
       logBtn.innerText = "Logout";
+      logBtn.className = "link_header link_active";
       logBtn.addEventListener("click", () => {
         sessionStorage.removeItem("token");
         window.location.reload();
