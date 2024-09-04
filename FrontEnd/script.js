@@ -51,7 +51,7 @@ async function initGallery(sectionGallery) {
 
 // Function to setup filters
 async function setupFilters(works) {
-  const filterContainer = document.querySelector(".filter_container");
+  const filterContainer = document.querySelector(".filter-container");
   const categories = await fetchCategories();
   categoryFilter(categories, filterContainer);
   addCategoryListener(works);
@@ -66,7 +66,7 @@ async function fetchCategories() {
     return await response.json();
   } catch (error) {
     console.error("Erreur", error);
-    return []; // In case of error, return an empty list
+    return [];
   }
 }
 
@@ -77,7 +77,7 @@ function categoryFilter(categories, filterContainer) {
   // Create "Tous" button
   const allButton = document.createElement("button");
   allButton.innerText = "Tous";
-  allButton.className = "filter_btn filter_btn--active";
+  allButton.className = "filter-button filteractive-button";
   allButton.dataset.categoryId = "0"; // ID for "Tous"
   filterContainer.appendChild(allButton);
 
@@ -91,20 +91,20 @@ function categoryFilter(categories, filterContainer) {
 function createButtonFilter(category, filterContainer) {
   const button = document.createElement("button");
   button.innerText = category.name;
-  button.className = "filter_btn";
+  button.className = "filter-button";
   button.dataset.categoryId = category.id;
   filterContainer.appendChild(button);
 }
 
 // Function to add listeners to filter buttons
 function addCategoryListener(works) {
-  const buttons = document.querySelectorAll(".filter_btn");
+  const buttons = document.querySelectorAll(".filter-button");
   buttons.forEach((button) => {
     button.addEventListener("click", () => {
-      document.querySelectorAll(".filter_btn").forEach((btn) => {
-        btn.classList.remove("filter_btn--active");
+      document.querySelectorAll(".filter-button").forEach((button) => {
+        button.classList.remove("filteractive-button");
       });
-      button.classList.add("filter_btn--active");
+      button.classList.add("filteractive-button");
       filterWorks(button.dataset.categoryId, works);
     });
   });
@@ -117,7 +117,6 @@ function filterWorks(categoryId, works) {
     categoryId === "0" ? true : work.category.id === parseInt(categoryId)
   );
   displayWorks(filteredWorks, sectionGallery);
-  console.log(filteredWorks); // Debugging output to check the filtered works
 }
 
 // Intialisation
@@ -150,7 +149,6 @@ async function loginUser() {
     //Store the token in sessionStorage
     sessionStorage.setItem("token", token);
 
-    // Call function adminUserMode
     adminUserMode();
   } catch (error) {
     console.error("Erreur lors de la connexion :", error);
@@ -160,7 +158,7 @@ async function loginUser() {
 function adminUserMode() {
   const token = sessionStorage.getItem("token");
 
-  if (isValidToken(token)) {
+  if (exitToken(token)) {
     hideFilters();
     configureLogoutButton();
     createAdminMenu();
@@ -169,23 +167,23 @@ function adminUserMode() {
   }
 }
 
-function isValidToken(token) {
+function exitToken(token) {
   return !!token;
 }
 
 function hideFilters() {
-  const filterElement = document.querySelector(".filter_container");
+  const filterElement = document.querySelector(".filter-container");
   if (filterElement) {
     filterElement.style.display = "none";
   }
 }
 
 function configureLogoutButton() {
-  const logBtn = document.querySelector("nav ul li:nth-child(3) a");
-  if (logBtn) {
-    logBtn.innerText = "Logout";
-    logBtn.className = "link_header link_active";
-    logBtn.addEventListener("click", handleLogout);
+  const logoutButton = document.querySelector("nav ul li:nth-child(3) a");
+  if (logoutButton) {
+    logoutButton.innerText = "Logout";
+    logoutButton.className = "link-header link-active";
+    logoutButton.addEventListener("click", handleLogout);
   }
 }
 
@@ -208,19 +206,19 @@ function addEditButtons() {
   sectionsToEdit.forEach((selector) => {
     const element = document.querySelector(selector);
     if (element) {
-      const editBtn = document.createElement("button");
-      editBtn.className = "edit_btn";
-      editBtn.innerHTML =
+      const editButton = document.createElement("button");
+      editButton.className = "edit-button";
+      editButton.innerHTML =
         '<i class="fa-regular fa-pen-to-square"></i> modifier';
-      element.insertAdjacentElement("afterend", editBtn);
+      element.insertAdjacentElement("afterend", editButton);
     }
   });
 }
 
 function attachEditButtonListeners() {
-  const editButtons = document.querySelectorAll(".edit_btn");
-  editButtons.forEach((btn) => {
-    btn.addEventListener("click", openModal);
+  const editButtons = document.querySelectorAll(".edit-button");
+  editButtons.forEach((button) => {
+    button.addEventListener("click", openModal);
   });
 }
 
@@ -232,8 +230,8 @@ loginUser();
 async function openModal(event) {
   event.preventDefault();
 
-  const modal = document.getElementById("modal1");
-  const openModalIcon = document.querySelector(".js_openModalIcon");
+  const modal = document.getElementById("modal");
+  const openModalIcon = document.querySelector(".js-openModalIcon");
 
   if (modal) {
     modal.style.display = "block";
@@ -248,8 +246,8 @@ async function openModal(event) {
 
 //Close modal
 function closeModal() {
-  const modal = document.getElementById("modal1");
-  const openModalIcon = document.querySelector(".js_openModalIcon");
+  const modal = document.getElementById("modal");
+  const openModalIcon = document.querySelector(".js-openModalIcon");
 
   if (modal) {
     modal.style.display = "none";
@@ -263,14 +261,14 @@ function closeModal() {
 }
 
 function setupModalCloseListener() {
-  const modal = document.getElementById("modal1");
+  const modal = document.getElementById("modal");
   if (modal) {
     modal.addEventListener("click", (e) => {
       if (e.target === modal) {
         closeModal();
       }
     });
-    const closeModalButton = document.querySelector(".closeModalItem");
+    const closeModalButton = document.querySelector(".close-modal");
     if (closeModalButton) {
       closeModalButton.addEventListener("click", closeModal);
     }
@@ -279,7 +277,7 @@ function setupModalCloseListener() {
 
 //Function to display works in the modal gallery
 function displayWorksModal(works) {
-  const modalGallery = document.querySelector(".galleryModal");
+  const modalGallery = document.querySelector(".gallery-modal");
   if (modalGallery) {
     modalGallery.innerHTML = "";
     works.forEach((work) => {
@@ -288,18 +286,17 @@ function displayWorksModal(works) {
     });
   }
 }
-console.log(displayWorksModal);
 
 // Initialize the gallery and modal setup when the page is loaded
 document.addEventListener("DOMContentLoaded", () => {
-  const sectionGalleryModal = document.querySelector(".galleryModal");
+  const sectionGalleryModal = document.querySelector(".gallery-modal");
   if (sectionGalleryModal) {
     initGallery(sectionGalleryModal);
   }
   setupModalCloseListener();
 
   // Add event listeners for opening the modal
-  document.querySelectorAll(".js_modal").forEach((el) => {
+  document.querySelectorAll(".js-modal").forEach((el) => {
     el.addEventListener("click", openModal);
   });
 });
@@ -354,7 +351,7 @@ document.querySelectorAll(".delete-icon").forEach((icon) => {
 });
 
 //Add a new project via the modal form
-document.getElementById("addPictureBtn").addEventListener("click", async () => {
+document.getElementById("add-picture").addEventListener("click", async () => {
   const formData = new FormData();
   formData.append("title", document.getElementById("title").value);
   formData.append("image", document.getElementById("image").files[0]);
