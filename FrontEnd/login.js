@@ -27,8 +27,7 @@ form.addEventListener("submit", async (e) => {
     const result = await response.json();
 
     sessionStorage.setItem("token", result.token);
-    window.location = "index.html";
-    return;
+    window.location.href = "index.html";
   }
   document.getElementById("errorMessage").style.visibility = "visible";
 });

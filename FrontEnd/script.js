@@ -151,25 +151,26 @@ async function loginUser() {
 
     adminUserMode();
   } catch (error) {
-    console.error("Erreur lors de la connexion :", error);
+    console.log(error);
+    /*console.error("Erreur lors de la connexion :", error);*/
   }
 }
 
 function adminUserMode() {
   const token = sessionStorage.getItem("token");
 
-  if (exitToken(token)) {
+  if (/*exitToken*/ token) {
     hideFilters();
-    configureLogoutButton();
+    configureConnectButton();
     createAdminMenu();
     addEditButtons();
     attachEditButtonListeners();
   }
 }
 
-function exitToken(token) {
+/*function exitToken(token) {
   return !!token;
-}
+}*/
 
 function hideFilters() {
   const filterElement = document.querySelector(".filter-container");
@@ -178,18 +179,18 @@ function hideFilters() {
   }
 }
 
-function configureLogoutButton() {
-  const logoutButton = document.querySelector("nav ul li:nth-child(3) a");
-  if (logoutButton) {
-    logoutButton.innerText = "Logout";
-    logoutButton.className = "link-header link-active";
-    logoutButton.addEventListener("click", handleLogout);
+function configureConnectButton() {
+  const connectButton = document.querySelector("nav ul li:nth-child(3) a");
+  if (connectButton) {
+    connectButton.innerText = "Logout";
+    connectButton.className = "link-header link-active";
+    connectButton.addEventListener("click", handleLogout);
   }
 }
 
 function handleLogout() {
   sessionStorage.removeItem("token");
-  window.location.reload();
+  window.location.href = "index.html";
 }
 
 function createAdminMenu() {
@@ -202,24 +203,21 @@ function createAdminMenu() {
 }
 
 function addEditButtons() {
-  const sectionsToEdit = ["#portfolio h2"];
-  sectionsToEdit.forEach((selector) => {
-    const element = document.querySelector(selector);
-    if (element) {
-      const editButton = document.createElement("button");
-      editButton.className = "edit-button";
-      editButton.innerHTML =
-        '<i class="fa-regular fa-pen-to-square"></i> modifier';
-      element.insertAdjacentElement("afterend", editButton);
-    }
-  });
+  const sectionsToEdit = document.querySelector(".edit-mode");
+  const editIcon = document.createElement("i");
+  editIcon.classList.add("fa-regular", "fa-pen-to-square");
+  sectionsToEdit.appendChild(editIcon);
+  const elementReference = sectionsToEdit.querySelector("i");
+  const span = document.createElement("span");
+  span.classList.add("edit-button");
+  span.textContent = " modifier";
+  elementReference.parentNode.insertBefore(span, elementReference.nextSibling);
 }
 
 function attachEditButtonListeners() {
-  const editButtons = document.querySelectorAll(".edit-button");
-  editButtons.forEach((button) => {
-    button.addEventListener("click", openModal);
-  });
+  // Add event listeners for opening the modal
+  const editButton = document.querySelector(".edit-button");
+  editButton.addEventListener("click", openModal);
 }
 
 loginUser();
@@ -227,16 +225,11 @@ loginUser();
 // ****** Modal ****** //
 
 //Open modal
-async function openModal(event) {
-  event.preventDefault();
-
-  const modal = document.getElementById("modal");
-  const openModalIcon = document.querySelector(".js-openModalIcon");
+async function openModal() {
+  const modal = document.querySelector(".modal");
 
   if (modal) {
     modal.style.display = "block";
-    modal.setAttribute("aria-hidden", "false");
-    modal.setAttribute("aria-modal", "true");
 
     //Fetch and display works in the modal
     const works = await fetchWorks();
@@ -246,28 +239,24 @@ async function openModal(event) {
 
 //Close modal
 function closeModal() {
-  const modal = document.getElementById("modal");
-  const openModalIcon = document.querySelector(".js-openModalIcon");
+  const modal = document.querySelector(".modal");
 
   if (modal) {
     modal.style.display = "none";
     modal.setAttribute("aria-hidden", "true");
     modal.setAttribute("aria-modal", "false");
-
-    if (openModalIcon) {
-      openModalIcon.style.display = "inline";
-    }
   }
 }
 
 function setupModalCloseListener() {
-  const modal = document.getElementById("modal");
+  const modal = document.querySelector(".modal");
   if (modal) {
     modal.addEventListener("click", (e) => {
       if (e.target === modal) {
         closeModal();
       }
     });
+
     const closeModalButton = document.querySelector(".close-modal");
     if (closeModalButton) {
       closeModalButton.addEventListener("click", closeModal);
@@ -294,91 +283,4 @@ document.addEventListener("DOMContentLoaded", () => {
     initGallery(sectionGalleryModal);
   }
   setupModalCloseListener();
-
-  // Add event listeners for opening the modal
-  document.querySelectorAll(".js-modal").forEach((el) => {
-    el.addEventListener("click", openModal);
-  });
 });
-
-/*//Add DOM
-function addWorkToGallery(work) {
-  const sectionGallery = document.querySelector(".gallery");
-  const workElement = createWorkElement(work);
-  sectionGallery.appendChild(workElement);
-}
-
-//Removing existing work
-async function deleteWork(workId) {
-  try {
-    const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-    });
-    if (!response.ok)
-      throw new Error("Erreur lors de la suppression du travail");
-    document.querySelector(`[data-id='${workId}']`).remove(); // DOM update
-  } catch (error) {
-    console.error("Erreur", error);
-  }
-}*/
-
-/*
-//Removing existing work
-async function deleteWork(workId) {
-  try {
-    const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-    });
-    if (!response.ok)
-      throw new Error("Erreur lors de la suppression du travail");
-    document.querySelector(`[data-id='${workId}']`).remove(); // DOM update
-  } catch (error) {
-    console.error("Erreur", error);
-  }
-}
-
-document.querySelectorAll(".delete-icon").forEach((icon) => {
-  icon.addEventListener("click", (e) => {
-    const workId = e.target.closest("figure").dataset.id;
-    deleteWork(workId);
-  });
-});
-
-//Add a new project via the modal form
-document.getElementById("add-picture").addEventListener("click", async () => {
-  const formData = new FormData();
-  formData.append("title", document.getElementById("title").value);
-  formData.append("image", document.getElementById("image").files[0]);
-  formData.append("category", document.getElementById("category").value);
-
-  try {
-    const response = await fetch("http://localhost:5678/api/works", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-      body: formData,
-    });
-
-    if (!response.ok) throw new Error("Erreur lors de l'ajout du travail");
-    const newWork = await response.json();
-    addWorkToGallery(newWork); // Mise à jour du DOM
-  } catch (error) {
-    console.error("Erreur", error);
-  }
-});
-
-//Add DOM
-function addWorkToGallery(work) {
-  const sectionGallery = document.querySelector(".gallery");
-  const workElement = createWorkElement(work);
-  sectionGallery.appendChild(workElement);
-}
-
-*/

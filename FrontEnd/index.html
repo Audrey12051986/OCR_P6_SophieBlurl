@@ -19,18 +19,8 @@
     ></script>
   </head>
   <body>
-    <a href="#" class="js-modal">Ouvrir la boîte modale</a>
-    <i class="fa-regular fa-pen-to-square js-openModalIcon"></i>
-    <aside
-      id="modal"
-      class="modal"
-      aria-hidden="true"
-      role="dialog"
-      aria-labelledby="modal-title"
-      aria-modal="false"
-    >
-      <div class="modal-container">
-        <!--id="edit-gallery"-->
+    <div class="modal">
+      <div id="edit-gallery" class="modal-container js-modal">
         <div class="modal-header">
           <button class="close-modal">
             <i class="fa-solid fa-xmark"></i>
@@ -39,36 +29,11 @@
         <h3 id="modal-title" class="modal-title">Galerie photo</h3>
         <div class="modal-content">
           <!--Existing picture gallery-->
-          <div class="gallery-modal"><!--Existing picture gallery--></div>
+          <div class="gallery-modal">0</div>
         </div>
         <button id="add-picture">Ajouter une photo</button>
-
-        <!-- New project form -->
-        <!--
-        <form id="add-project">
-          <label for="form-title">Titre du projet :</label>
-          <input type="text" id="form-title" name="form-title" required />
-
-          <label for="form-image">Image :</label>
-          <input
-            type="file"
-            id="form-image"
-            name="form-image"
-            accept="image/*"
-            required
-          />
-
-          <label for="form-category">Catégorie :</label>
-          <select name="form-category" id="form-category" required>
-             Options will be added dynamically via JavaScript 
-          </select>
-
-          <button type="submit">Ajouter</button>
-        </form>-->
-
-        <!--<a href="#" id="delete-gallery">Supprimer la galerie</a>-->
       </div>
-    </aside>
+    </div>
     <header>
       <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
       <nav>
@@ -78,7 +43,9 @@
           </li>
           <li><a href="index.html#contact" class="link-header">contact</a></li>
           <li>
-            <a id="logBtn" href="login.html" class="link-header">login</a>
+            <a id="connect-button" href="login.html" class="link-header"
+              >login</a
+            >
           </li>
           <li>
             <a href="#" class="link-header"
