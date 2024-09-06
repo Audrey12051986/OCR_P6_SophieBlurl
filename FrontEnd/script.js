@@ -159,7 +159,7 @@ async function loginUser() {
 function adminUserMode() {
   const token = sessionStorage.getItem("token");
 
-  if (/*exitToken*/ token) {
+  if (token) {
     hideFilters();
     configureConnectButton();
     createAdminMenu();
@@ -167,10 +167,6 @@ function adminUserMode() {
     attachEditButtonListeners();
   }
 }
-
-/*function exitToken(token) {
-  return !!token;
-}*/
 
 function hideFilters() {
   const filterElement = document.querySelector(".filter-container");
@@ -190,7 +186,7 @@ function configureConnectButton() {
 
 function handleLogout() {
   sessionStorage.removeItem("token");
-  window.location.href = "index.html";
+  window.location.href = "/index.html";
 }
 
 function createAdminMenu() {

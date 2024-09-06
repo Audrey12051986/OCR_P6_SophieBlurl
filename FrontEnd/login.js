@@ -4,7 +4,8 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   // Cacher le message d'erreur au début de la soumission du formulaire
-  document.getElementById("errorMessage").style.visibility = "hidden";
+  const errorElement = document.querySelector(".alert");
+  errorElement.classList.remove("show");
 
   const data = new FormData(form);
   console.log("Données envoyées : ", {
@@ -27,7 +28,13 @@ form.addEventListener("submit", async (e) => {
     const result = await response.json();
 
     sessionStorage.setItem("token", result.token);
-    window.location.href = "index.html";
+    window.location = "index.html";
+    return;
   }
-  document.getElementById("errorMessage").style.visibility = "visible";
+
+  errorElement.classList.add("show");
+});
+
+document.querySelector(".button-closealert").addEventListener("click", () => {
+  document.querySelector(".alert").classList.remove("show");
 });

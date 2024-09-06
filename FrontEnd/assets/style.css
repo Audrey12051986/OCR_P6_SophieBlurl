@@ -275,10 +275,59 @@ table {
   align-self: center;
 }
 
+/* Style pour la container de l'erreur */
+.error-container {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Initialement caché et positionné à droite */
+.alert {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 0.25rem;
+  padding: 0.75rem 1.25rem;
+  position: fixed;
+  top: 15rem;
+  right: -400px; /* Cacher à droite */
+  transition: right 0.5s ease-in-out;
+}
+
 #errorMessage {
-  color: #e32b2b;
+  font-family: "Syne";
+  font-weight: 700;
+  font-size: 30px;
   text-align: center;
-  visibility: hidden;
+}
+
+/* Apparition avec animation */
+.alert.show {
+  right: 20rem;
+}
+
+/* Style pour le bouton de fermeture */
+.button-closealert {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: black;
+  cursor: pointer;
+  margin-left: auto;
+  z-index: 100;
+}
+
+.alert-icon {
+  padding: 10px;
+  font-size: 20px;
+  color: #721c24;
+}
+
+.alert-message {
+  font-size: larger;
 }
 
 /*Admin mode*/
