@@ -213,7 +213,9 @@ function addEditButtons() {
 function attachEditButtonListeners() {
   // Add event listeners for opening the modal
   const editButton = document.querySelector(".edit-button");
-  editButton.addEventListener("click", openModal);
+  if (editButton) {
+    editButton.addEventListener("click", openModal);
+  }
 }
 
 loginUser();
