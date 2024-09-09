@@ -122,11 +122,12 @@ function filterWorks(categoryId, works) {
 // Intialisation
 const sectionGallery = document.querySelector(".gallery");
 initGallery(sectionGallery);
+adminUserMode();
 
 // ****** Admin Mode ****** //
 
 //Call function after connexion ok
-async function loginUser() {
+/*async function loginUser() {
   const email = "sophie.bluel@test.tld";
   const password = "S0phie";
 
@@ -152,16 +153,16 @@ async function loginUser() {
     adminUserMode();
   } catch (error) {
     console.log(error);
-    /*console.error("Erreur lors de la connexion :", error);*/
+    /*console.error("Erreur lors de la connexion :", error);
   }
-}
+}*/
 
 function adminUserMode() {
   const token = sessionStorage.getItem("token");
 
   if (token) {
     hideFilters();
-    configureConnectButton();
+    configureLogoutButton();
     createAdminMenu();
     addEditButtons();
     attachEditButtonListeners();
@@ -175,18 +176,20 @@ function hideFilters() {
   }
 }
 
-function configureConnectButton() {
-  const connectButton = document.querySelector("nav ul li:nth-child(3) a");
-  if (connectButton) {
-    connectButton.innerText = "Logout";
-    connectButton.className = "link-header link-active";
-    connectButton.addEventListener("click", handleLogout);
-  }
+function configureLogoutButton() {
+  const loginButton = document.querySelector("nav ul li:nth-child(3) a");
+  let logoutButton = document.createElement("a");
+  loginButton.after(logoutButton);
+  logoutButton.innerText = "Logout";
+  logoutButton.className = "link-header link-active";
+  logoutButton.addEventListener("click", handleLogout);
+  loginButton.remove();
 }
 
 function handleLogout() {
   sessionStorage.removeItem("token");
-  window.location.href = "/index.html";
+  window.location.href = "index.html";
+  //return false;
 }
 
 function createAdminMenu() {
@@ -214,11 +217,10 @@ function attachEditButtonListeners() {
   // Add event listeners for opening the modal
   const editButton = document.querySelector(".edit-button");
   if (editButton) {
+    console.log("Bouton d'édition trouvé : ", editButton);
     editButton.addEventListener("click", openModal);
   }
 }
-
-loginUser();
 
 // ****** Modal ****** //
 
@@ -229,9 +231,17 @@ async function openModal() {
   if (modal) {
     modal.style.display = "block";
 
+    // Afficher un indicateur de chargement pendant la récupération des données
+    const loader = document.createElement("p");
+    loader.innerText = "Chargement...";
+    modal.appendChild(loader);
+
     //Fetch and display works in the modal
     const works = await fetchWorks();
     displayWorksModal(works);
+
+    // Supprimer l'indicateur de chargement
+    loader.remove();
   }
 }
 
