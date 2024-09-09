@@ -126,37 +126,6 @@ adminUserMode();
 
 // ****** Admin Mode ****** //
 
-//Call function after connexion ok
-/*async function loginUser() {
-  const email = "sophie.bluel@test.tld";
-  const password = "S0phie";
-
-  try {
-    const response = await fetch("http://localhost:5678/api/users/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Login failed");
-    }
-
-    const data = await response.json();
-    const token = data.token;
-
-    //Store the token in sessionStorage
-    sessionStorage.setItem("token", token);
-
-    adminUserMode();
-  } catch (error) {
-    console.log(error);
-    /*console.error("Erreur lors de la connexion :", error);
-  }
-}*/
-
 function adminUserMode() {
   const token = sessionStorage.getItem("token");
 
@@ -189,7 +158,6 @@ function configureLogoutButton() {
 function handleLogout() {
   sessionStorage.removeItem("token");
   window.location.href = "index.html";
-  //return false;
 }
 
 function createAdminMenu() {
@@ -217,7 +185,6 @@ function attachEditButtonListeners() {
   // Add event listeners for opening the modal
   const editButton = document.querySelector(".edit-button");
   if (editButton) {
-    console.log("Bouton d'édition trouvé : ", editButton);
     editButton.addEventListener("click", openModal);
   }
 }
@@ -226,69 +193,59 @@ function attachEditButtonListeners() {
 
 //Open modal
 async function openModal() {
-  const modal = document.querySelector(".modal");
-
-  if (modal) {
-    modal.style.display = "block";
-
-    // Afficher un indicateur de chargement pendant la récupération des données
-    const loader = document.createElement("p");
-    loader.innerText = "Chargement...";
-    modal.appendChild(loader);
-
-    //Fetch and display works in the modal
-    const works = await fetchWorks();
-    displayWorksModal(works);
-
-    // Supprimer l'indicateur de chargement
-    loader.remove();
-  }
+  const containerModals = document.querySelector(".container-modals");
+  containerModals.style.display = "flex";
 }
 
 //Close modal
 function closeModal() {
-  const modal = document.querySelector(".modal");
-
-  if (modal) {
-    modal.style.display = "none";
-    modal.setAttribute("aria-hidden", "true");
-    modal.setAttribute("aria-modal", "false");
-  }
+  const xmarkClose = document.querySelector(".close-modal");
+  const containerModals = document.querySelector(".container-modals");
+  xmarkClose.addEventListener("click", () => {
+    containerModals.style.display = "none";
+  });
 }
+closeModal();
 
-function setupModalCloseListener() {
-  const modal = document.querySelector(".modal");
-  if (modal) {
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        closeModal();
-      }
-    });
-
-    const closeModalButton = document.querySelector(".close-modal");
-    if (closeModalButton) {
-      closeModalButton.addEventListener("click", closeModal);
-    }
+/*function attachCloseModalListeners() {
+  // Add event listeners for opening the modal
+  const closeModalGallery = document.querySelector(".close-modal");
+  if (closeModalGallery) {
+    closeModalGallery.addEventListener("click", closeModal);
   }
-}
+}*/
 
 //Function to display works in the modal gallery
-function displayWorksModal(works) {
+
+/*async function displayWorksModal() {
+  works.innerHTML = "";
+  const galleryModal = await fetchWorks();
+}
+displayWorksModal();*/
+/*function displayWorksModal(works) {
   const modalGallery = document.querySelector(".gallery-modal");
   if (modalGallery) {
     modalGallery.innerHTML = "";
     works.forEach((work) => {
-      const workElement = createWorkElement(work);
+      conest workElement = createWorkElement();
+      const spanTrash = document.createElement("span");
+      const trash = document.createElement("i");
+      trash.classList.add("fa-solid", "fa-trash-can");
+      trash.id = work.id;
+      img.src = work.imageUrl;
+      spanTrash.appendChild(trash);
       modalGallery.appendChild(workElement);
     });
   }
-}
+}*/
 
 // Initialize the gallery and modal setup when the page is loaded
-document.addEventListener("DOMContentLoaded", () => {
+/*document.addEventListener("DOMContentLoaded", () => {
   const sectionGalleryModal = document.querySelector(".gallery-modal");
   if (sectionGalleryModal) {
     initGallery(sectionGalleryModal);
   }
-  setupModalCloseListener();
-});
+  attachCloseModalListeners();
+});*/
+
+//Add Delete works
