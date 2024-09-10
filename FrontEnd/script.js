@@ -207,45 +207,90 @@ function closeModal() {
 }
 closeModal();
 
-/*function attachCloseModalListeners() {
-  // Add event listeners for opening the modal
-  const closeModalGallery = document.querySelector(".close-modal");
-  if (closeModalGallery) {
-    closeModalGallery.addEventListener("click", closeModal);
-  }
-}*/
+// Create Element for modal gallery
+function createWorkElementModal(work) {
+  const galleryModal = document.querySelector(".gallery-modal");
+
+  const workElementModal = document.createElement("figure");
+  workElementModal.dataset.category = work.category.name;
+  workElementModal.dataset.id = work.id;
+
+  const imageModal = document.createElement("img");
+  imageModal.src = work.imageUrl;
+
+  const spanTrash = document.createElement("span");
+  const trash = document.createElement("i");
+  trash.classList.add("fa-solid", "fa-trash-can");
+  trash.id = work.id;
+
+  spanTrash.appendChild(trash);
+  workElementModal.appendChild(spanTrash);
+  workElementModal.appendChild(imageModal);
+  galleryModal.appendChild(workElementModal);
+
+  return workElementModal;
+}
 
 //Function to display works in the modal gallery
-
-/*async function displayWorksModal() {
-  works.innerHTML = "";
-  const galleryModal = await fetchWorks();
+async function displayWorksModal() {
+  const galleryModal = document.querySelector(".gallery-modal");
+  galleryModal.innerHTML = "";
+  const worksModal = await fetchWorks();
+  worksModal.forEach((work) => {
+    const workElementModal = createWorkElementModal(work);
+    galleryModal.appendChild(workElementModal);
+  });
+  deleteWorksModal();
 }
-displayWorksModal();*/
-/*function displayWorksModal(works) {
-  const modalGallery = document.querySelector(".gallery-modal");
-  if (modalGallery) {
-    modalGallery.innerHTML = "";
-    works.forEach((work) => {
-      conest workElement = createWorkElement();
-      const spanTrash = document.createElement("span");
-      const trash = document.createElement("i");
-      trash.classList.add("fa-solid", "fa-trash-can");
-      trash.id = work.id;
-      img.src = work.imageUrl;
-      spanTrash.appendChild(trash);
-      modalGallery.appendChild(workElement);
+
+displayWorksModal();
+
+//Delete works in modal gallery
+async function deleteWorksModal() {
+  const trashAll = document.querySelectorAll(".fa-trash-can");
+  console.log(trashAll);
+
+  trashAll.forEach((trash) => {
+    trash.addEventListener("click", async (e) => {
+      const workId = trash.id;
+      const token = sessionStorage.getItem("token");
+
+      if (!token) {
+        console.error("Vous n'êtes pas autorisé à supprimer les éléments.");
+        return;
+      }
+
+      console.log(`Suppression du travail avec l'ID ${workId}`);
+
+      const fetchDelete = await fetch(
+        `http://localhost:5678/api/works/${workId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!fetchDelete.ok) {
+        throw new Error("Erreur lors de la suppression du travail.");
+      }
+
+      // Si la suppression est réussie, rafraîchir les galeries modale et globale
+      await refreshGalleries();
+
+      console.log(`Travail avec l'ID ${workId} supprimé avec succès.`);
     });
-  }
-}*/
+  });
+}
 
-// Initialize the gallery and modal setup when the page is loaded
-/*document.addEventListener("DOMContentLoaded", () => {
-  const sectionGalleryModal = document.querySelector(".gallery-modal");
-  if (sectionGalleryModal) {
-    initGallery(sectionGalleryModal);
-  }
-  attachCloseModalListeners();
-});*/
+deleteWorksModal();
 
-//Add Delete works
+async function refreshGalleries() {
+  const sectionGallery = document.querySelector(".gallery");
+  const galleryModal = document.querySelector(".gallery-modal");
+
+  await initGallery(sectionGallery);
+  await displayWorksModal();
+}
