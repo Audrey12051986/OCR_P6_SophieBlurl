@@ -219,6 +219,7 @@ function createWorkElementModal(work) {
   imageModal.src = work.imageUrl;
 
   const spanTrash = document.createElement("span");
+  spanTrash.classList.add("span-trash");
   const trash = document.createElement("i");
   trash.classList.add("fa-solid", "fa-trash-can");
   trash.id = work.id;
