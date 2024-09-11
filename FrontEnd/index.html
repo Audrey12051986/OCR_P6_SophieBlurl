@@ -26,6 +26,25 @@
         <div class="gallery-modal">0</div>
         <button id="add-picture">Ajouter une photo</button>
       </div>
+      <div class="modal-addwork">
+        <h2 class="modal-title">Ajout d'une photo</h2>
+        <span><i class="fa-solid fa-xmark close-modal"></i></span>
+        <span><i class="fa-solid fa-arrow-left"></i></span>
+        <form>
+          <div class="container-picture">
+            <span><i class="fa-regular fa-image"></i></span>
+            <label for="addpicture-file">+ Ajouter photo</label>
+            <input type="file" id="addpicture-file" name="image" />
+            <img src="#" alt="Aperçu image" />
+            <p>jpg, png : 4mo max</p>
+          </div>
+          <label for="addwork-title">Titre</label>
+          <input type="text" id="addwork-title" name="title" />
+          <label for="addwork-category"></label>
+          <select name="category" id="addwork-category"></select>
+          <input type="submit" class="addwork-validation" value="Valider" />
+        </form>
+      </div>
     </div>
     <header>
       <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>

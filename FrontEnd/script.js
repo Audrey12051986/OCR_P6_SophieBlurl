@@ -69,6 +69,7 @@ async function fetchCategories() {
     return [];
   }
 }
+console.log(fetchCategories);
 
 // Function to create filter buttons
 function categoryFilter(categories, filterContainer) {
