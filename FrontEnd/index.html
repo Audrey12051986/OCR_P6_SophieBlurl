@@ -30,19 +30,26 @@
         <h2 class="modal-title">Ajout d'une photo</h2>
         <span><i class="fa-solid fa-xmark close-modal"></i></span>
         <span><i class="fa-solid fa-arrow-left"></i></span>
-        <form>
+        <form action="#" method="post">
           <div class="container-picture">
             <span><i class="fa-regular fa-image"></i></span>
-            <label for="addpicture-file">+ Ajouter photo</label>
+            <label for="addpicture-file" class="addpicture-file"
+              >+ Ajouter photo</label
+            >
             <input type="file" id="addpicture-file" name="image" />
             <img src="#" alt="Aperçu image" />
             <p>jpg, png : 4mo max</p>
           </div>
-          <label for="addwork-title">Titre</label>
+          <label for="addwork-title" class="addwork-police addwork-form"
+            >Titre</label
+          >
           <input type="text" id="addwork-title" name="title" />
-          <label for="addwork-category"></label>
+          <label for="addwork-category" class="addwork-police addwork-form"
+            >Catégorie</label
+          >
           <select name="category" id="addwork-category"></select>
-          <input type="submit" class="addwork-validation" value="Valider" />
+          <hr />
+          <input type="submit" id="addwork-validation" value="Valider" />
         </form>
       </div>
     </div>
