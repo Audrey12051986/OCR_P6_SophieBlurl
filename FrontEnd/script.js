@@ -296,3 +296,48 @@ async function refreshGalleries() {
   await initGallery(sectionGallery);
   await displayWorksModal();
 }
+
+//Display modal addwork
+const addPictureButton = document.querySelector("#add-picture");
+const addWorkModal = document.querySelector(".modal-addwork");
+const galleryModal = document.querySelector(".modal-gallery");
+const arrowLeft = document.querySelector(".fa-arrow-left");
+
+function displayAddworkModal() {
+  const addPictureButton = document.querySelector("#add-picture");
+  const addWorkModal = document.querySelector(".modal-addwork");
+  const galleryModal = document.querySelector(".modal-gallery");
+  addPictureButton.addEventListener("click", () => {
+    addWorkModal.style.display = "flex";
+    galleryModal.style.display = "none";
+  });
+}
+
+displayAddworkModal();
+
+//Return from modal addWork to modal gallery
+function returnModalGallery() {
+  const arrowLeft = document.querySelector(".fa-arrow-left");
+  const addWorkModal = document.querySelector(".modal-addwork");
+  const galleryModal = document.querySelector(".modal-gallery");
+  arrowLeft.addEventListener("click", () => {
+    addWorkModal.style.display = "none";
+    galleryModal.style.display = "flex";
+  });
+}
+
+returnModalGallery();
+
+//function closeAddworkModal
+function closeAddWorkModal() {
+  const xmarkAddWork = document.querySelector(".close-workmodal");
+  //const addWorkModal = document.querySelector(".modal-addwork");
+  const closeAddWorkModal = document.querySelector(".container-modals");
+  xmarkAddWork.addEventListener("click", () => {
+    //addWorkModal.style.display = "none";
+    closeAddWorkModal.style.display = "none";
+  });
+}
+closeAddWorkModal();
+
+//Retrieve categories from the API

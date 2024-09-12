@@ -521,7 +521,7 @@ table {
 
 /** modal addwork **/
 .modal-addwork {
-  display: flex;
+  display: none;
   flex-direction: column;
   background-color: var(--text-button-color);
   width: 630px;
