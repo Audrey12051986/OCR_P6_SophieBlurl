@@ -69,7 +69,6 @@ async function fetchCategories() {
     return [];
   }
 }
-console.log(fetchCategories);
 
 // Function to create filter buttons
 function categoryFilter(categories, filterContainer) {
@@ -186,27 +185,42 @@ function attachEditButtonListeners() {
   // Add event listeners for opening the modal
   const editButton = document.querySelector(".edit-button");
   if (editButton) {
-    editButton.addEventListener("click", openModal);
+    editButton.addEventListener("click", openGalleryModal);
   }
 }
 
 // ****** Modal ****** //
 
 //Open modal
-async function openModal() {
+async function openGalleryModal() {
   const containerModals = document.querySelector(".container-modals");
+  const galleryModal = document.querySelector(".modal-gallery");
+  const addWorkModal = document.querySelector(".modal-addwork");
+
+  // Afficher la modale galerie
   containerModals.style.display = "flex";
+  galleryModal.style.display = "flex";
+  addWorkModal.style.display = "none"; // Assurez-vous que la modale d'ajout est cachée
 }
 
 //Close modal
-function closeModal() {
+function closeGalleryModal() {
   const xmarkClose = document.querySelector(".close-modal");
   const containerModals = document.querySelector(".container-modals");
+  const galleryModal = document.querySelector(".modal-gallery");
+
   xmarkClose.addEventListener("click", () => {
     containerModals.style.display = "none";
   });
+
+  containerModals.addEventListener("click", (e) => {
+    if (!galleryModal.contains(e.target) && e.target !== galleryModal) {
+      containerModals.style.display = "none";
+    }
+  });
 }
-closeModal();
+
+closeGalleryModal();
 
 // Create Element for modal gallery
 function createWorkElementModal(work) {
@@ -291,7 +305,7 @@ deleteWorksModal();
 
 async function refreshGalleries() {
   const sectionGallery = document.querySelector(".gallery");
-  const galleryModal = document.querySelector(".gallery-modal");
+  //const galleryModal = document.querySelector(".gallery-modal");
 
   await initGallery(sectionGallery);
   await displayWorksModal();
@@ -326,38 +340,100 @@ returnModalGallery();
 //function closeAddworkModal
 function closeAddWorkModal() {
   const xmarkAddWork = document.querySelector(".close-workmodal");
-  //const addWorkModal = document.querySelector(".modal-addwork");
   const closeAddWorkModal = document.querySelector(".container-modals");
+
   xmarkAddWork.addEventListener("click", () => {
-    //addWorkModal.style.display = "none";
     closeAddWorkModal.style.display = "none";
   });
 }
+
 closeAddWorkModal();
 
-//Image preview
+// Sélection des éléments du DOM
 const previousImage = document.querySelector(".container-picture img");
 const inputFile = document.querySelector(".file-input");
 const labelFile = document.querySelector(".file-label");
 const iconFile = document.querySelector(".fa-image");
 const formatImage = document.querySelector(".container-picture p");
 
-//function imagePreview
+// Fonction pour mettre à jour la prévisualisation de l'image
+function updateImagePreview(file) {
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    previousImage.src = e.target.result;
+    previousImage.style.display = "flex";
+  };
+  reader.readAsDataURL(file);
+}
 
-inputFile.addEventListener("change", () => {
+// Fonction pour masquer les éléments liés au fichier
+function hideFileElements() {
+  labelFile.style.display = "none";
+  iconFile.style.display = "none";
+  formatImage.style.display = "none";
+}
+
+// Fonction principale appelée lors du changement de fichier
+function handleFileChange() {
   const file = inputFile.files[0];
-  console.log(file);
   if (file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      previousImage.src = e.target.result;
-      previousImage.style.display = "flex";
-      labelFile.style.display = "none";
-      iconFile.style.display = "none";
-      formatImage.style.display = "none";
-    };
-    reader.readAsDataURL(file);
+    updateImagePreview(file);
+    hideFileElements();
   }
-});
+}
 
-//Retrieve categories from the API
+// Écouteur d'événement pour détecter le changement de fichier
+inputFile.addEventListener("change", handleFileChange);
+
+//Creating a list of categories in select
+async function categoriesListModal() {
+  const selectModal = document.querySelector("#addwork-category");
+  const categoryList = await fetchCategories();
+  categoryList.forEach((category) => {
+    const option = document.createElement("option");
+    option.value = category.id;
+    option.textContent = category.name;
+    selectModal.appendChild(option);
+  });
+}
+
+categoriesListModal();
+
+//API method POST for add work
+
+function addWorkPost() {
+  const form = document.querySelector(".modal-addwork form");
+  const titleWork = document.querySelector("#addwork-title");
+  const categoryWork = document.querySelector("#addwork-category");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form); // Récupère automatiquement les champs du formulaire
+    const token = sessionStorage.getItem("token");
+    console.log("Token récupéré:", token);
+
+    if (!token) {
+      console.error("Vous n'êtes pas autorisé à ajouter des éléments.");
+      return;
+    }
+
+    const fetchPost = await fetch(`http://localhost:5678/api/works`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData, // Utilise FormData directement
+    });
+
+    if (fetchPost.ok) {
+      const data = await fetchPost.json();
+      console.log("Ajout réussi:", data);
+      await refreshGalleries(); // Rafraîchit les galeries après ajout
+    } else {
+      console.error("Erreur lors de l'ajout de l'œuvre");
+    }
+  });
+}
+
+addWorkPost();
