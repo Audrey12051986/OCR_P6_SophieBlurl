@@ -553,7 +553,6 @@ table {
   gap: 10px;
   padding: 20px;
   margin: 40px 0 0 0;
-  width: 100%;
   background-color: var(--containerpicture-color);
   border-radius: 10px;
 }
@@ -566,11 +565,15 @@ table {
 
 .container-picture img {
   display: none;
+  padding: 0;
+  gap: 0;
   width: 100%;
   height: 100%;
+  max-width: 129px;
+  /*max-height: 169px;*/
 }
 
-.addpicture-file {
+.file-label {
   display: flex;
   justify-content: center;
   align-items: center;

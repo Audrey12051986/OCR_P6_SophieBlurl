@@ -298,11 +298,6 @@ async function refreshGalleries() {
 }
 
 //Display modal addwork
-const addPictureButton = document.querySelector("#add-picture");
-const addWorkModal = document.querySelector(".modal-addwork");
-const galleryModal = document.querySelector(".modal-gallery");
-const arrowLeft = document.querySelector(".fa-arrow-left");
-
 function displayAddworkModal() {
   const addPictureButton = document.querySelector("#add-picture");
   const addWorkModal = document.querySelector(".modal-addwork");
@@ -339,5 +334,30 @@ function closeAddWorkModal() {
   });
 }
 closeAddWorkModal();
+
+//Image preview
+const previousImage = document.querySelector(".container-picture img");
+const inputFile = document.querySelector(".file-input");
+const labelFile = document.querySelector(".file-label");
+const iconFile = document.querySelector(".fa-image");
+const formatImage = document.querySelector(".container-picture p");
+
+//function imagePreview
+
+inputFile.addEventListener("change", () => {
+  const file = inputFile.files[0];
+  console.log(file);
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      previousImage.src = e.target.result;
+      previousImage.style.display = "flex";
+      labelFile.style.display = "none";
+      iconFile.style.display = "none";
+      formatImage.style.display = "none";
+    };
+    reader.readAsDataURL(file);
+  }
+});
 
 //Retrieve categories from the API
