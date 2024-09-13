@@ -356,9 +356,14 @@ returnModalGallery();
 function closeAddWorkModal() {
   const xmarkAddWork = document.querySelector(".close-workmodal");
   const closeAddWorkModal = document.querySelector(".container-modals");
+  const validationButton = document.getElementById("addwork-validation");
 
   xmarkAddWork.addEventListener("click", (e) => {
     //e.stopPropagation(); // Empêcher la propagation du clic
+    closeAddWorkModal.style.display = "none";
+  });
+
+  validationButton.addEventListener("click", (e) => {
     closeAddWorkModal.style.display = "none";
   });
 }
@@ -382,15 +387,17 @@ function preventModalClose() {
 preventModalClose();
 
 // Sélection des éléments du DOM
-//const previousImage = document.querySelector(".container-picture img");
-//const inputFile = document.querySelector(".file-input");
-//const labelFile = document.querySelector(".file-label");
-//const iconFile = document.querySelector(".fa-image");
-//const formatImage = document.querySelector(".container-picture p");
+const previousImage = document.querySelector(".container-picture img");
+const inputFile = document.querySelector(".file-input");
+const labelFile = document.querySelector(".file-label");
+const iconFile = document.querySelector(".fa-image");
+const formatImage = document.querySelector(".container-picture p");
 
 // Fonction pour mettre à jour la prévisualisation de l'image
-/*function updateImagePreview(file) {
+function updateImagePreview(file) {
   const reader = new FileReader();
+  const previousImage = document.querySelector(".container-picture img");
+
   reader.onload = function (e) {
     previousImage.src = e.target.result;
     previousImage.style.display = "flex";
@@ -413,12 +420,12 @@ function handleFileChange() {
     hideFileElements();
   }
 }
-*/
+
 // Écouteur d'événement pour détecter le changement de fichier
-//inputFile.addEventListener("change", handleFileChange);
+inputFile.addEventListener("change", handleFileChange);
 
 //Creating a list of categories in select
-/*async function categoriesListModal() {
+async function categoriesListModal() {
   const selectModal = document.querySelector("#addwork-category");
   const categoryList = await fetchCategories();
   categoryList.forEach((category) => {
@@ -430,10 +437,9 @@ function handleFileChange() {
 }
 
 categoriesListModal();
-*/
-//API method POST for add work
 
-/*function addWorkPost() {
+//API method POST for add work
+function addWorkPost() {
   const form = document.querySelector(".modal-addwork form");
   const titleWork = document.querySelector("#addwork-title");
   const categoryWork = document.querySelector("#addwork-category");
@@ -443,19 +449,14 @@ categoriesListModal();
 
     const formData = new FormData(form);
     const token = sessionStorage.getItem("token");
-    console.log("Token récupéré:", token);
+    //console.log("Token récupéré:", token);
 
-    /*if (!token) {
-      console.error("Vous n'êtes pas autorisé à ajouter des éléments.");
-      return;
-    }*/
-
-/*const fetchPost = await fetch(`http://localhost:5678/api/works`, {
+    const fetchPost = await fetch(`http://localhost:5678/api/works`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      body: formData, // Utilise FormData directement
+      body: formData,
     });
 
     if (fetchPost.ok) {
@@ -469,4 +470,3 @@ categoriesListModal();
 }
 
 addWorkPost();
-*/
