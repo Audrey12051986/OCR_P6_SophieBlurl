@@ -192,14 +192,12 @@ function addEditButtons() {
 // ****** Modal ****** //
 
 //Open modal gallery
-// Définition de la fonction openGalleryModal
 async function openGalleryModal() {
   const containerModals = document.querySelector(".container-modals");
   const galleryModal = document.querySelector(".modal-gallery");
   const addWorkModal = document.querySelector(".modal-addwork");
   const editButton = document.querySelector(".edit-button");
 
-  // Vérifie si le bouton existe avant de lui ajouter l'événement
   if (editButton) {
     editButton.addEventListener("click", () => {
       containerModals.style.display = "flex";
@@ -301,7 +299,6 @@ async function deleteWorksModal() {
         throw new Error("Erreur lors de la suppression du travail.");
       }
 
-      // Si la suppression est réussie, rafraîchir les galeries modale et globale
       await refreshGalleries();
     });
   });
@@ -439,11 +436,11 @@ async function categoriesListModal() {
 categoriesListModal();
 
 //API method POST for add work
-function addWorkPost() {
+/*function addWorkPost() {
   const form = document.querySelector(".modal-addwork form");
   const titleWork = document.querySelector("#addwork-title");
   const categoryWork = document.querySelector("#addwork-category");
-
+  
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -465,6 +462,64 @@ function addWorkPost() {
       await refreshGalleries();
     } else {
       console.error("Erreur lors de l'ajout de l'œuvre");
+    }
+  });
+}
+
+addWorkPost();*/
+
+function addWorkPost() {
+  const form = document.querySelector(".modal-addwork form");
+  const titleWork = document.querySelector("#addwork-title");
+  const categoryWork = document.querySelector("#addwork-category");
+  const fileInput = document.querySelector("#addpicture-file");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Validation checks
+    if (!fileInput.files.length) {
+      alert("Veuillez ajouter une image.");
+      return;
+    }
+
+    if (!titleWork.value.trim()) {
+      alert("Veuillez saisir un titre.");
+      return;
+    }
+
+    if (!categoryWork.value) {
+      alert("Veuillez sélectionner une catégorie.");
+      return;
+    }
+
+    const formData = new FormData(form);
+    const token = sessionStorage.getItem("token");
+
+    try {
+      const fetchPost = await fetch(`http://localhost:5678/api/works`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (fetchPost.ok) {
+        const data = await fetchPost.json();
+        console.log("Ajout réussi:", data);
+
+        // Show success message
+        alert("L'œuvre a été ajoutée avec succès !");
+
+        await refreshGalleries(); // Refresh galleries after successful addition
+      } else {
+        console.error("Erreur lors de l'ajout de l'œuvre");
+        alert("Erreur lors de l'ajout de l'œuvre. Veuillez réessayer.");
+      }
+    } catch (error) {
+      console.error("Erreur réseau:", error);
+      alert("Problème de connexion. Veuillez vérifier votre connexion.");
     }
   });
 }
