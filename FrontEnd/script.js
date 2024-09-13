@@ -425,6 +425,13 @@ inputFile.addEventListener("change", handleFileChange);
 async function categoriesListModal() {
   const selectModal = document.querySelector("#addwork-category");
   const categoryList = await fetchCategories();
+  const select = document.getElementById("addwork-category");
+
+  const emptyOption = document.createElement("option");
+  emptyOption.value = "";
+  // emptyOption.textContent = "Sélectionner une catégorie";
+  select.appendChild(emptyOption);
+
   categoryList.forEach((category) => {
     const option = document.createElement("option");
     option.value = category.id;

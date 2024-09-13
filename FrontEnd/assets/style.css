@@ -631,6 +631,7 @@ hr {
 }
 
 #addwork-validation {
+  align-self: center;
   padding: 10px 20px;
   border-radius: 60px;
   border: none;
