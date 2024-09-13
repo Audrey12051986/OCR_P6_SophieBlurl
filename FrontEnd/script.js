@@ -309,6 +309,7 @@ async function deleteWorksModal() {
 
 deleteWorksModal();
 
+//Refresh galleries modal and website
 async function refreshGalleries() {
   const sectionGallery = document.querySelector(".gallery");
   //const galleryModal = document.querySelector(".gallery-modal");
@@ -317,19 +318,22 @@ async function refreshGalleries() {
   await displayWorksModal();
 }
 
-//Display modal addwork
-function displayAddworkModal() {
+//Open modal addwork
+function openAddworkModal() {
   const addPictureButton = document.querySelector("#add-picture");
   const addWorkModal = document.querySelector(".modal-addwork");
   const galleryModal = document.querySelector(".modal-gallery");
+  const containerModals = document.querySelector(".container-modals");
 
-  addPictureButton.addEventListener("click", () => {
+  addPictureButton.addEventListener("click", (e) => {
+    e.stopPropagation();
+    containerModals.style.display = "flex";
     addWorkModal.style.display = "flex";
     galleryModal.style.display = "none";
   });
 }
 
-displayAddworkModal();
+openAddworkModal();
 
 //Return from modal addWork to modal gallery
 function returnModalGallery() {
@@ -338,7 +342,8 @@ function returnModalGallery() {
   const galleryModal = document.querySelector(".modal-gallery");
   const containerModals = document.querySelector(".container-modals");
 
-  arrowLeft.addEventListener("click", () => {
+  arrowLeft.addEventListener("click", (e) => {
+    e.stopPropagation(); // Empêcher la propagation du clic
     containerModals.style.display = "flex";
     galleryModal.style.display = "flex";
     addWorkModal.style.display = "none";
@@ -352,12 +357,29 @@ function closeAddWorkModal() {
   const xmarkAddWork = document.querySelector(".close-workmodal");
   const closeAddWorkModal = document.querySelector(".container-modals");
 
-  xmarkAddWork.addEventListener("click", () => {
+  xmarkAddWork.addEventListener("click", (e) => {
+    //e.stopPropagation(); // Empêcher la propagation du clic
     closeAddWorkModal.style.display = "none";
   });
 }
 
 closeAddWorkModal();
+
+// Prevent closing on click on form
+function preventModalClose() {
+  const addWorkModal = document.querySelector(".modal-addwork");
+  const formElements = addWorkModal.querySelectorAll(
+    "input, label, select, textarea"
+  );
+
+  formElements.forEach((element) => {
+    element.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+  });
+}
+
+preventModalClose();
 
 // Sélection des éléments du DOM
 //const previousImage = document.querySelector(".container-picture img");
