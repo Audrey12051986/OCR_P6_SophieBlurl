@@ -244,11 +244,15 @@ function createWorkElementModal(work) {
   const spanTrash = document.createElement("span");
   spanTrash.classList.add("span-trash");
 
+  const containerTrash = document.createElement("div");
+  containerTrash.classList.add("container-trash");
+
   const trash = document.createElement("i");
   trash.classList.add("fa-solid", "fa-trash-can");
   trash.id = work.id;
 
-  spanTrash.appendChild(trash);
+  spanTrash.appendChild(containerTrash);
+  containerTrash.appendChild(trash);
   workElementModal.appendChild(spanTrash);
   workElementModal.appendChild(imageModal);
   galleryModal.appendChild(workElementModal);
@@ -442,39 +446,6 @@ async function categoriesListModal() {
 
 categoriesListModal();
 
-//API method POST for add work
-/*function addWorkPost() {
-  const form = document.querySelector(".modal-addwork form");
-  const titleWork = document.querySelector("#addwork-title");
-  const categoryWork = document.querySelector("#addwork-category");
-  
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(form);
-    const token = sessionStorage.getItem("token");
-    //console.log("Token récupéré:", token);
-
-    const fetchPost = await fetch(`http://localhost:5678/api/works`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
-
-    if (fetchPost.ok) {
-      const data = await fetchPost.json();
-      console.log("Ajout réussi:", data);
-      await refreshGalleries();
-    } else {
-      console.error("Erreur lors de l'ajout de l'œuvre");
-    }
-  });
-}
-
-addWorkPost();*/
-
 function addWorkPost() {
   const form = document.querySelector(".modal-addwork form");
   const titleWork = document.querySelector("#addwork-title");
@@ -517,12 +488,12 @@ function addWorkPost() {
         console.log("Ajout réussi:", data);
 
         // Show success message
-        alert("L'œuvre a été ajoutée avec succès !");
+        alert("Le projet a été ajoutée avec succès !");
 
         await refreshGalleries(); // Refresh galleries after successful addition
       } else {
-        console.error("Erreur lors de l'ajout de l'œuvre");
-        alert("Erreur lors de l'ajout de l'œuvre. Veuillez réessayer.");
+        console.error("Erreur lors de l'ajout du projet");
+        alert("Erreur lors de l'ajout du projet. Veuillez réessayer.");
       }
     } catch (error) {
       console.error("Erreur réseau:", error);
