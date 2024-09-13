@@ -134,7 +134,7 @@ function adminUserMode() {
     configureLogoutButton();
     createAdminMenu();
     addEditButtons();
-    attachEditButtonListeners();
+    //attachEditButtonListeners();
   }
 }
 
@@ -181,29 +181,39 @@ function addEditButtons() {
   elementReference.parentNode.insertBefore(span, elementReference.nextSibling);
 }
 
-function attachEditButtonListeners() {
+/*function attachEditButtonListeners() {
   // Add event listeners for opening the modal
   const editButton = document.querySelector(".edit-button");
   if (editButton) {
     editButton.addEventListener("click", openGalleryModal);
   }
-}
+}*/
 
 // ****** Modal ****** //
 
-//Open modal
+//Open modal gallery
+// Définition de la fonction openGalleryModal
 async function openGalleryModal() {
   const containerModals = document.querySelector(".container-modals");
   const galleryModal = document.querySelector(".modal-gallery");
   const addWorkModal = document.querySelector(".modal-addwork");
+  const editButton = document.querySelector(".edit-button");
 
-  // Afficher la modale galerie
-  containerModals.style.display = "flex";
-  galleryModal.style.display = "flex";
-  addWorkModal.style.display = "none"; // Assurez-vous que la modale d'ajout est cachée
+  // Vérifie si le bouton existe avant de lui ajouter l'événement
+  if (editButton) {
+    editButton.addEventListener("click", () => {
+      containerModals.style.display = "flex";
+      galleryModal.style.display = "flex";
+      addWorkModal.style.display = "none";
+    });
+  } else {
+    console.error("L'élément editButton est introuvable.");
+  }
 }
+openGalleryModal();
 
-//Close modal
+//Close modal gallery
+
 function closeGalleryModal() {
   const xmarkClose = document.querySelector(".close-modal");
   const containerModals = document.querySelector(".container-modals");
@@ -235,6 +245,7 @@ function createWorkElementModal(work) {
 
   const spanTrash = document.createElement("span");
   spanTrash.classList.add("span-trash");
+
   const trash = document.createElement("i");
   trash.classList.add("fa-solid", "fa-trash-can");
   trash.id = work.id;
@@ -247,7 +258,7 @@ function createWorkElementModal(work) {
   return workElementModal;
 }
 
-//Function to display works in the modal gallery
+//Display works in the modal gallery
 async function displayWorksModal() {
   const galleryModal = document.querySelector(".gallery-modal");
   galleryModal.innerHTML = "";
@@ -264,7 +275,6 @@ displayWorksModal();
 //Delete works in modal gallery
 async function deleteWorksModal() {
   const trashAll = document.querySelectorAll(".fa-trash-can");
-  console.log(trashAll);
 
   trashAll.forEach((trash) => {
     trash.addEventListener("click", async (e) => {
@@ -275,8 +285,6 @@ async function deleteWorksModal() {
         console.error("Vous n'êtes pas autorisé à supprimer les éléments.");
         return;
       }
-
-      console.log(`Suppression du travail avec l'ID ${workId}`);
 
       const fetchDelete = await fetch(
         `http://localhost:5678/api/works/${workId}`,
@@ -295,8 +303,6 @@ async function deleteWorksModal() {
 
       // Si la suppression est réussie, rafraîchir les galeries modale et globale
       await refreshGalleries();
-
-      console.log(`Travail avec l'ID ${workId} supprimé avec succès.`);
     });
   });
 }
@@ -316,6 +322,7 @@ function displayAddworkModal() {
   const addPictureButton = document.querySelector("#add-picture");
   const addWorkModal = document.querySelector(".modal-addwork");
   const galleryModal = document.querySelector(".modal-gallery");
+
   addPictureButton.addEventListener("click", () => {
     addWorkModal.style.display = "flex";
     galleryModal.style.display = "none";
@@ -329,9 +336,12 @@ function returnModalGallery() {
   const arrowLeft = document.querySelector(".fa-arrow-left");
   const addWorkModal = document.querySelector(".modal-addwork");
   const galleryModal = document.querySelector(".modal-gallery");
+  const containerModals = document.querySelector(".container-modals");
+
   arrowLeft.addEventListener("click", () => {
-    addWorkModal.style.display = "none";
+    containerModals.style.display = "flex";
     galleryModal.style.display = "flex";
+    addWorkModal.style.display = "none";
   });
 }
 
@@ -350,14 +360,14 @@ function closeAddWorkModal() {
 closeAddWorkModal();
 
 // Sélection des éléments du DOM
-const previousImage = document.querySelector(".container-picture img");
-const inputFile = document.querySelector(".file-input");
-const labelFile = document.querySelector(".file-label");
-const iconFile = document.querySelector(".fa-image");
-const formatImage = document.querySelector(".container-picture p");
+//const previousImage = document.querySelector(".container-picture img");
+//const inputFile = document.querySelector(".file-input");
+//const labelFile = document.querySelector(".file-label");
+//const iconFile = document.querySelector(".fa-image");
+//const formatImage = document.querySelector(".container-picture p");
 
 // Fonction pour mettre à jour la prévisualisation de l'image
-function updateImagePreview(file) {
+/*function updateImagePreview(file) {
   const reader = new FileReader();
   reader.onload = function (e) {
     previousImage.src = e.target.result;
@@ -381,12 +391,12 @@ function handleFileChange() {
     hideFileElements();
   }
 }
-
+*/
 // Écouteur d'événement pour détecter le changement de fichier
-inputFile.addEventListener("change", handleFileChange);
+//inputFile.addEventListener("change", handleFileChange);
 
 //Creating a list of categories in select
-async function categoriesListModal() {
+/*async function categoriesListModal() {
   const selectModal = document.querySelector("#addwork-category");
   const categoryList = await fetchCategories();
   categoryList.forEach((category) => {
@@ -398,10 +408,10 @@ async function categoriesListModal() {
 }
 
 categoriesListModal();
-
+*/
 //API method POST for add work
 
-function addWorkPost() {
+/*function addWorkPost() {
   const form = document.querySelector(".modal-addwork form");
   const titleWork = document.querySelector("#addwork-title");
   const categoryWork = document.querySelector("#addwork-category");
@@ -409,16 +419,16 @@ function addWorkPost() {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const formData = new FormData(form); // Récupère automatiquement les champs du formulaire
+    const formData = new FormData(form);
     const token = sessionStorage.getItem("token");
     console.log("Token récupéré:", token);
 
-    if (!token) {
+    /*if (!token) {
       console.error("Vous n'êtes pas autorisé à ajouter des éléments.");
       return;
-    }
+    }*/
 
-    const fetchPost = await fetch(`http://localhost:5678/api/works`, {
+/*const fetchPost = await fetch(`http://localhost:5678/api/works`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -429,7 +439,7 @@ function addWorkPost() {
     if (fetchPost.ok) {
       const data = await fetchPost.json();
       console.log("Ajout réussi:", data);
-      await refreshGalleries(); // Rafraîchit les galeries après ajout
+      await refreshGalleries();
     } else {
       console.error("Erreur lors de l'ajout de l'œuvre");
     }
@@ -437,3 +447,4 @@ function addWorkPost() {
 }
 
 addWorkPost();
+*/
