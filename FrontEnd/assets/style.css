@@ -202,16 +202,16 @@ table {
   transition: background-color 0.3s, color 0.3s;
 }
 
-/* Styles for the "Tous" button - always active */
+/* Styles for the "Tous" button*/
 .filter-button[data-category-id="0"] {
-  background: var(--main-button-color); /* Fond vert */
-  color: var(--text-button-color); /* Texte blanc */
+  background: var(--main-button-color);
+  color: var(--text-button-color);
 }
 
-/* Default styles for other buttons (initially transparent) */
+/* Default styles for other buttons*/
 .filter-button:not([data-category-id="0"]) {
-  background: transparent; /* Fond transparent */
-  color: var(--main-button-color); /* Texte vert */
+  background: transparent;
+  color: var(--main-button-color);
 }
 
 /* Hover and active states for other buttons */
@@ -222,6 +222,7 @@ table {
   border-color: var(--main-button-color);
 }
 
+/* Gallery*/
 .gallery {
   width: 100%;
   display: grid;
@@ -232,7 +233,6 @@ table {
   margin-top: 5em;
 }
 
-/*.gallery img,*/
 .miniWork img {
   width: 100%;
   object-fit: cover;
@@ -332,7 +332,7 @@ table {
   padding: 0.75rem 1.25rem;
   position: fixed;
   top: 0;
-  right: -400px; /* Cacher à droite */
+  right: -400px;
   transition: right 0.5s ease-in-out;
 }
 
@@ -372,7 +372,7 @@ table {
   font-size: larger;
 }
 
-/*Admin mode*/
+/****** Admin mode ******/
 .topMenu {
   background-color: var(--black-color);
   color: var(--text-button-color);
@@ -386,6 +386,7 @@ table {
   font-family: "Work Sans";
   font-size: 16px;
 }
+
 .topMenu i,
 .edit-button i {
   margin-right: 0.5em;
@@ -439,9 +440,6 @@ table {
 
 /** modal modification **/
 .container-modals {
-  /*max-width: 1140px;
-  max-height: auto;
-  margin: auto;*/
   display: none;
   justify-content: center;
   align-items: center;
@@ -663,9 +661,23 @@ hr {
   background-color: var(--vaidation-buttonmodal-color);
   width: 237px;
 }
-#addwork-validation:hover {
+#addwork-validation .valid {
   background-color: var(--main-button-color);
 }
+
+/*.message-container {
+  margin-bottom: 10px;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}
+
+.success-message {
+  color: green;
+  font-weight: bold;
+}*/
 
 /** end reset css**/
 body {

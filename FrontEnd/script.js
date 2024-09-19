@@ -134,7 +134,6 @@ function adminUserMode() {
     configureLogoutButton();
     createAdminMenu();
     addEditButtons();
-    //attachEditButtonListeners();
   }
 }
 
@@ -181,14 +180,6 @@ function addEditButtons() {
   elementReference.parentNode.insertBefore(span, elementReference.nextSibling);
 }
 
-/*function attachEditButtonListeners() {
-  // Add event listeners for opening the modal
-  const editButton = document.querySelector(".edit-button");
-  if (editButton) {
-    editButton.addEventListener("click", openGalleryModal);
-  }
-}*/
-
 // ****** Modal ****** //
 
 //Open modal gallery
@@ -211,7 +202,6 @@ async function openGalleryModal() {
 openGalleryModal();
 
 //Close modal gallery
-
 function closeGalleryModal() {
   const xmarkClose = document.querySelector(".close-modal");
   const containerModals = document.querySelector(".container-modals");
@@ -264,6 +254,7 @@ function createWorkElementModal(work) {
 async function displayWorksModal() {
   const galleryModal = document.querySelector(".gallery-modal");
   galleryModal.innerHTML = "";
+
   const worksModal = await fetchWorks();
   worksModal.forEach((work) => {
     const workElementModal = createWorkElementModal(work);
@@ -313,7 +304,6 @@ deleteWorksModal();
 //Refresh galleries modal and website
 async function refreshGalleries() {
   const sectionGallery = document.querySelector(".gallery");
-  //const galleryModal = document.querySelector(".gallery-modal");
 
   await initGallery(sectionGallery);
   await displayWorksModal();
@@ -357,10 +347,9 @@ returnModalGallery();
 function closeAddWorkModal() {
   const xmarkAddWork = document.querySelector(".close-workmodal");
   const closeAddWorkModal = document.querySelector(".container-modals");
-  const validationButton = document.getElementById("addwork-validation");
+  const validationButton = document.querySelector("#addwork-validation");
 
   xmarkAddWork.addEventListener("click", (e) => {
-    //e.stopPropagation(); // Empêcher la propagation du clic
     closeAddWorkModal.style.display = "none";
   });
 
@@ -384,7 +373,6 @@ function preventModalClose() {
     });
   });
 }
-
 preventModalClose();
 
 // Sélection des éléments du DOM
@@ -394,7 +382,7 @@ const labelFile = document.querySelector(".file-label");
 const iconFile = document.querySelector(".fa-image");
 const formatImage = document.querySelector(".container-picture p");
 
-// Fonction pour mettre à jour la prévisualisation de l'image
+// Preview image
 function updateImagePreview(file) {
   const reader = new FileReader();
   const previousImage = document.querySelector(".container-picture img");
@@ -406,14 +394,14 @@ function updateImagePreview(file) {
   reader.readAsDataURL(file);
 }
 
-// Fonction pour masquer les éléments liés au fichier
+// Hide image elements
 function hideFileElements() {
   labelFile.style.display = "none";
   iconFile.style.display = "none";
   formatImage.style.display = "none";
 }
 
-// Fonction principale appelée lors du changement de fichier
+// Image loading
 function handleFileChange() {
   const file = inputFile.files[0];
   if (file) {
@@ -443,33 +431,26 @@ async function categoriesListModal() {
     selectModal.appendChild(option);
   });
 }
-
 categoriesListModal();
+
+const sectionForm = document.querySelector("#form-addwork");
+
+// Reset la section projets
+function resetForm() {
+  sectionForm.innerHTML = "";
+}
 
 function addWorkPost() {
   const form = document.querySelector(".modal-addwork form");
-  const titleWork = document.querySelector("#addwork-title");
+  /*const titleWork = document.querySelector("#addwork-title");
   const categoryWork = document.querySelector("#addwork-category");
   const fileInput = document.querySelector("#addpicture-file");
+  const modal = document.querySelector(".modal-addwork");*/
+  const errorDisplay = document.querySelector(".error-message");
+  const successDisplay = document.querySelector(".success-message");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-
-    // Validation checks
-    if (!fileInput.files.length) {
-      alert("Veuillez ajouter une image.");
-      return;
-    }
-
-    if (!titleWork.value.trim()) {
-      alert("Veuillez saisir un titre.");
-      return;
-    }
-
-    if (!categoryWork.value) {
-      alert("Veuillez sélectionner une catégorie.");
-      return;
-    }
 
     const formData = new FormData(form);
     const token = sessionStorage.getItem("token");
@@ -487,19 +468,64 @@ function addWorkPost() {
         const data = await fetchPost.json();
         console.log("Ajout réussi:", data);
 
-        // Show success message
-        alert("Le projet a été ajoutée avec succès !");
+        alert("Ajout du projet réussi!");
+        resetForm();
 
-        await refreshGalleries(); // Refresh galleries after successful addition
+        await refreshGalleries();
       } else {
-        console.error("Erreur lors de l'ajout du projet");
         alert("Erreur lors de l'ajout du projet. Veuillez réessayer.");
       }
     } catch (error) {
-      console.error("Erreur réseau:", error);
-      alert("Problème de connexion. Veuillez vérifier votre connexion.");
+      alert("Erreur lors de l'ajout du projet. Veuillez réessayer.");
     }
   });
 }
 
+/*function resetForm() {
+  const form = document.querySelector("#form-addwork");
+  const fileInput = document.querySelector("#addpicture-file");
+  const errorDisplay = document.querySelector(".error-message");
+  const successDisplay = document.querySelector(".success-message");
+
+  // Réinitialiser le formulaire (textes et select)
+  form.reset();
+
+  // Manuellement réinitialiser l'input file
+  fileInput.value = "";
+
+  // Cacher les messages d'erreur et de succès
+  if (errorDisplay) errorDisplay.textContent = "";
+  if (successDisplay) successDisplay.textContent = "";
+
+  // Désactiver le bouton de validation et retirer la classe 'valid'
+  const buttonValidationForm = document.querySelector(".addwork-validation");
+  buttonValidationForm.classList.remove("valid");
+  buttonValidationForm.disabled = true;
+}*/
+
 addWorkPost();
+
+//Verification form completed
+function verifFormCompleted() {
+  const buttonValidationForm = document.querySelector("#addwork-validation");
+  const form = document.querySelector("#form-addwork");
+  const titleForm = document.querySelector("#addwork-title");
+  const categoryForm = document.querySelector("#addwork-category");
+  const inputFile = document.querySelector("#addpicture-file");
+
+  form.addEventListener("input", () => {
+    if (
+      titleForm.value.trim() !== "" && // Vérifie que le titre n'est pas vide
+      categoryForm.value !== "" && // Vérifie qu'une catégorie est sélectionnée
+      inputFile.files.length > 0 // Vérifie qu'un fichier est sélectionné
+    ) {
+      buttonValidationForm.classList.add("valid");
+      buttonValidationForm.disabled = false;
+    } else {
+      buttonValidationForm.classList.remove("valid");
+      buttonValidationForm.disabled = true;
+    }
+  });
+}
+
+verifFormCompleted();

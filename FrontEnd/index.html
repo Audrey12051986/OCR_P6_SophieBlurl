@@ -31,7 +31,7 @@
         <h2 class="modal-title">Ajout d'une photo</h2>
         <span><i class="fa-solid fa-xmark close-workmodal"></i></span>
         <span><i class="fa-solid fa-arrow-left"></i></span>
-        <form action="#" method="post">
+        <form action="#" method="post" id="form-addwork">
           <div class="container-picture">
             <span><i class="fa-regular fa-image"></i></span>
             <label for="addpicture-file" class="file-label"
@@ -51,8 +51,37 @@
           <label for="addwork-category" class="addwork-police">Catégorie</label>
           <select name="category" id="addwork-category"></select>
           <hr />
-          <input type="submit" id="addwork-validation" value="Valider" />
+          <!--<input type="reset" value="reset" id="reset-form" />-->
+          <input
+            type="submit"
+            id="addwork-validation"
+            value="Valider"
+            disabled
+          />
+          <!-- <div class="error-container">
+            <div class="alert alert-dangerous" role="alert">
+              <i
+                id="errorMessage"
+                class="fa-solid fa-exclamation"
+                aria-hidden="true"
+              ></i>
+              <span class="alert-message"
+                >E-mail ou mot de passe incorrect.</span
+              >
+              <button
+                type="button"
+                class="button-closealert"
+                aria-label="Close"
+              >
+                <i class="fa-solid fa-xmark alert-icon"></i>
+              </button>
+            </div>
+          </div>-->
         </form>
+        <div class="message-container">
+          <p class="error-message"></p>
+          <p class="success-message"></p>
+        </div>
       </div>
     </div>
     <header>
@@ -110,16 +139,16 @@
         <div class="edit-mode">
           <h2>Mes Projets</h2>
 
-          <!-- Dynamically managed edit button with js-->
+          <!-- Edit button dynamically managed with JS-->
         </div>
         <div class="filter-container">
           <ul class="filter-buttons" id="filter-container">
-            <!-- Les boutons de filtre seront ajoutés ici dynamiquement par JS -->
+            <!-- filter buttons dynamically managed with JS -->
           </ul>
         </div>
 
         <div class="gallery">
-          <!-- La galerie est gérée dynamiquement par JavaScript -->
+          <!-- gallery filter buttons dynamically managed with JS -->
         </div>
       </section>
       <section id="contact">

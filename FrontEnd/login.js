@@ -2,16 +2,16 @@
 function handleFormSubmit(event) {
   event.preventDefault(); // Prevent default form submission behavior
 
-  hideErrorMessage(); // Hide error message at the start
+  hideErrorMessage();
 
-  const data = getFormData(); // Get form data
+  const data = getFormData();
 
   console.log("Données envoyées : ", {
     email: data.get("email"),
     password: data.get("password"),
   });
 
-  submitLoginData(data); // Submit login data
+  submitLoginData(data);
 }
 
 // Function to get form data
