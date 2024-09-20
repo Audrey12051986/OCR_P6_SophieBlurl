@@ -19,14 +19,10 @@ function createWorkElement(work) {
   workElement.dataset.category = work.category.name;
   workElement.dataset.id = work.id;
 
-  const imageElement = document.createElement("img");
-  imageElement.src = work.imageUrl;
-
-  const captionElement = document.createElement("figcaption");
-  captionElement.innerText = work.title;
-
-  workElement.appendChild(imageElement);
-  workElement.appendChild(captionElement);
+  workElement.innerHTML = `
+    <img src="${work.imageUrl}" alt="${work.title}">
+    <figcaption>${work.title}</figcaption>
+  `;
 
   return workElement;
 }
@@ -222,30 +218,18 @@ closeGalleryModal();
 
 // Create Element for modal gallery
 function createWorkElementModal(work) {
-  const galleryModal = document.querySelector(".gallery-modal");
-
   const workElementModal = document.createElement("figure");
   workElementModal.dataset.category = work.category.name;
   workElementModal.dataset.id = work.id;
 
-  const imageModal = document.createElement("img");
-  imageModal.src = work.imageUrl;
-
-  const spanTrash = document.createElement("span");
-  spanTrash.classList.add("span-trash");
-
-  const containerTrash = document.createElement("div");
-  containerTrash.classList.add("container-trash");
-
-  const trash = document.createElement("i");
-  trash.classList.add("fa-solid", "fa-trash-can");
-  trash.id = work.id;
-
-  spanTrash.appendChild(containerTrash);
-  containerTrash.appendChild(trash);
-  workElementModal.appendChild(spanTrash);
-  workElementModal.appendChild(imageModal);
-  galleryModal.appendChild(workElementModal);
+  workElementModal.innerHTML = `
+    <span class="span-trash">
+      <div class="container-trash">
+        <i class="fa-solid fa-trash-can" id="${work.id}"></i>
+      </div>
+    </span>
+    <img src="${work.imageUrl}" alt="Work Image">
+  `;
 
   return workElementModal;
 }
@@ -260,6 +244,7 @@ async function displayWorksModal() {
     const workElementModal = createWorkElementModal(work);
     galleryModal.appendChild(workElementModal);
   });
+
   deleteWorksModal();
 }
 
@@ -305,39 +290,6 @@ async function deleteWorksModal() {
     });
   });
 }
-
-/*async function deleteWorksModal() {
-  const trashAll = document.querySelectorAll(".fa-trash-can");
-
-  trashAll.forEach((trash) => {
-    trash.addEventListener("click", async (e) => {
-      const workId = trash.id;
-      const token = sessionStorage.getItem("token");
-
-      if (!token) {
-        console.error("Vous n'êtes pas autorisé à supprimer les éléments.");
-        return;
-      }
-
-      const fetchDelete = await fetch(
-        `http://localhost:5678/api/works/${workId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!fetchDelete.ok) {
-        throw new Error("Erreur lors de la suppression du travail.");
-      }
-
-      await refreshGalleries();
-    });
-  });
-}*/
 
 deleteWorksModal();
 
