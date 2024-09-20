@@ -268,6 +268,46 @@ displayWorksModal();
 //Delete works in modal gallery
 async function deleteWorksModal() {
   const trashAll = document.querySelectorAll(".fa-trash-can");
+  const token = sessionStorage.getItem("token");
+
+  if (!token) {
+    console.error("Vous n'^tes pas autoriser à supprimer les projets");
+    return;
+  }
+
+  trashAll.forEach((trash) => {
+    trash.addEventListener("click", async (e) => {
+      const workId = trash.id;
+      const fetchDelete = await fetch(
+        `http://localhost:5678/api/works/${workId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!fetchDelete.ok) {
+        console.error("Erreur lors de la suppression du projet.");
+        return;
+      }
+
+      const selector = `[data-id="${workId}"]`;
+      const elements = document.querySelectorAll(selector);
+
+      elements.forEach((element) => {
+        element.remove();
+      });
+
+      console.log(`Projet avec l'ID ${workId} supprimé du DOM`);
+    });
+  });
+}
+
+/*async function deleteWorksModal() {
+  const trashAll = document.querySelectorAll(".fa-trash-can");
 
   trashAll.forEach((trash) => {
     trash.addEventListener("click", async (e) => {
@@ -297,7 +337,7 @@ async function deleteWorksModal() {
       await refreshGalleries();
     });
   });
-}
+}*/
 
 deleteWorksModal();
 
