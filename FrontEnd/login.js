@@ -1,6 +1,6 @@
 // Function to handle form submission
 function handleFormSubmit(event) {
-  event.preventDefault(); // Prevent default form submission behavior
+  event.preventDefault();
 
   hideErrorMessage();
 
@@ -38,7 +38,7 @@ async function submitLoginData(data) {
     sessionStorage.setItem("token", result.token);
     window.location = "index.html";
   } else {
-    showErrorMessage(); // Show error message if login fails
+    showErrorMessage();
   }
 }
 

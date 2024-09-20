@@ -55,32 +55,32 @@
           <input
             type="submit"
             id="addwork-validation"
+            class="valid"
             value="Valider"
             disabled
           />
-          <!-- <div class="error-container">
-            <div class="alert alert-dangerous" role="alert">
-              <i
-                id="errorMessage"
-                class="fa-solid fa-exclamation"
-                aria-hidden="true"
-              ></i>
-              <span class="alert-message"
-                >E-mail ou mot de passe incorrect.</span
-              >
-              <button
-                type="button"
-                class="button-closealert"
-                aria-label="Close"
-              >
-                <i class="fa-solid fa-xmark alert-icon"></i>
-              </button>
-            </div>
-          </div>-->
         </form>
-        <div class="message-container">
-          <p class="error-message"></p>
-          <p class="success-message"></p>
+        <div class="container-message">
+          <!--<div class="alert alert-error" role="alert">
+            <i
+              id="error-message"
+              class="fa-solid fa-exclamation"
+              aria-hidden="true"
+            ></i>
+            <span class="alert-message"
+              >Tous les champs du formulaire ne sont pas complétés.</span
+            >
+            <button type="button" class="button-closealert" aria-label="Close">
+              <i class="fa-solid fa-xmark alert-icon"></i>
+            </button>
+          </div>-->
+          <div class="alert alert-check" role="alert"></div>
+          <i
+            id="check-message"
+            class="fa-solid fa-check ari"
+            aria-hidden="true"
+          ></i>
+          <span class="alert-check"></span>
         </div>
       </div>
     </div>

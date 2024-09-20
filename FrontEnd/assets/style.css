@@ -315,7 +315,7 @@ table {
 }
 
 /* Style pour la container de l'erreur */
-.error-container {
+.container-message {
   position: relative;
   overflow: hidden;
 }
@@ -325,9 +325,7 @@ table {
   display: flex;
   gap: 10px;
   align-items: center;
-  background-color: var(--bg-alert-color);
-  color: var(--text-alert-color);
-  border: 1px solid var(--border-alert-color);
+
   border-radius: 0.25rem;
   padding: 0.75rem 1.25rem;
   position: fixed;
@@ -336,7 +334,13 @@ table {
   transition: right 0.5s ease-in-out;
 }
 
-#errorMessage {
+.alert-error {
+  background-color: var(--bg-alert-color);
+  color: var(--text-alert-color);
+  border: 1px solid var(--border-alert-color);
+}
+
+.error-message {
   font-family: "Syne";
   font-weight: 700;
   font-size: 30px;
@@ -345,7 +349,7 @@ table {
 
 /* Apparition avec animation */
 .alert.show {
-  right: 0.5rem;
+  right: 3rem;
 }
 
 /* Style pour le bouton de fermeture */
@@ -649,8 +653,8 @@ hr {
   padding: 10px 20px;
   border-radius: 60px;
   border: none;
-  background-color: var(--main-button-color);
   color: var(--text-button-color);
+  background-color: var(--vaidation-buttonmodal-color);
   font-family: "Syne";
   font-weight: 700;
   font-size: 16px;
@@ -658,10 +662,11 @@ hr {
   margin: 2.1em auto;
   width: auto;
   transition: background-color 0.3s, color 0.3s;
-  background-color: var(--vaidation-buttonmodal-color);
+
   width: 237px;
 }
-#addwork-validation .valid {
+
+#addwork-validation.valid {
   background-color: var(--main-button-color);
 }
 

@@ -421,7 +421,6 @@ async function categoriesListModal() {
 
   const emptyOption = document.createElement("option");
   emptyOption.value = "";
-  // emptyOption.textContent = "Sélectionner une catégorie";
   select.appendChild(emptyOption);
 
   categoryList.forEach((category) => {
@@ -435,11 +434,7 @@ categoriesListModal();
 
 const sectionForm = document.querySelector("#form-addwork");
 
-// Reset la section projets
-function resetForm() {
-  sectionForm.innerHTML = "";
-}
-
+//Function add work in the gallery
 function addWorkPost() {
   const form = document.querySelector(".modal-addwork form");
   /*const titleWork = document.querySelector("#addwork-title");
@@ -472,36 +467,53 @@ function addWorkPost() {
         resetForm();
 
         await refreshGalleries();
-      } else {
-        alert("Erreur lors de l'ajout du projet. Veuillez réessayer.");
       }
     } catch (error) {
-      alert("Erreur lors de l'ajout du projet. Veuillez réessayer.");
+      showErrorMessage("Une erreur s'est produite. Veuillez réessayer.");
     }
   });
 }
 
-/*function resetForm() {
-  const form = document.querySelector("#form-addwork");
-  const fileInput = document.querySelector("#addpicture-file");
-  const errorDisplay = document.querySelector(".error-message");
-  const successDisplay = document.querySelector(".success-message");
+// Reset form addwork
+function resetForm() {
+  const form = document.querySelector(".modal-addwork form"); // Sélection du formulaire
+  form.reset(); // Réinitialise tous les champs du formulaire
 
-  // Réinitialiser le formulaire (textes et select)
-  form.reset();
+  // Réinitialise l'input file séparément car `form.reset()` ne le fait pas pour le fichier
+  //inputFile.value = "";
+  inputFile.style.display = "none";
 
-  // Manuellement réinitialiser l'input file
-  fileInput.value = "";
+  // Si tu as un aperçu d'image, tu peux également vouloir le réinitialiser
+  const imgPreview = document.querySelector(".container-picture img");
+  if (imgPreview) {
+    imgPreview.src = "#"; // Réinitialise l'aperçu de l'image
+  }
+}
 
-  // Cacher les messages d'erreur et de succès
-  if (errorDisplay) errorDisplay.textContent = "";
-  if (successDisplay) successDisplay.textContent = "";
+// Function to show error message
+function showErrorMessage() {
+  const errorElement = document.querySelector(".alert");
+  const alertMessage = errorElement.querySelector(".alert-message");
 
-  // Désactiver le bouton de validation et retirer la classe 'valid'
-  const buttonValidationForm = document.querySelector(".addwork-validation");
-  buttonValidationForm.classList.remove("valid");
-  buttonValidationForm.disabled = true;
-}*/
+  alertMessage.textContent = message;
+
+  errorElement.classList.add("show");
+}
+
+// Function to hide error message
+/*function hideErrorMessage() {
+  const errorElement = document.querySelector(".alert");
+  errorElement.classList.remove("show");
+}
+
+// Add event listener to form submit
+const form = document.getElementById("form-addwork");
+form.addEventListener("submit", addWorkPost);
+
+// Add event listener to close alert button
+document
+  .querySelector(".button-closealert")
+  .addEventListener("click", hideErrorMessage);*/
 
 addWorkPost();
 
@@ -515,9 +527,9 @@ function verifFormCompleted() {
 
   form.addEventListener("input", () => {
     if (
-      titleForm.value.trim() !== "" && // Vérifie que le titre n'est pas vide
-      categoryForm.value !== "" && // Vérifie qu'une catégorie est sélectionnée
-      inputFile.files.length > 0 // Vérifie qu'un fichier est sélectionné
+      titleForm.value.trim() !== "" &&
+      categoryForm.value !== "" &&
+      inputFile.files.length > 0
     ) {
       buttonValidationForm.classList.add("valid");
       buttonValidationForm.disabled = false;
