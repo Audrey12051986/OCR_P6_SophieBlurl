@@ -1,17 +1,8 @@
 // ****** Gallery ****** //
+//////////////////////////
 
-// Function to fetch works
-async function fetchWorks() {
-  try {
-    const response = await fetch("http://localhost:5678/api/works");
-    if (!response.ok)
-      throw new Error("Erreur lors de la récupération des travaux");
-    return await response.json();
-  } catch (error) {
-    console.error("Erreur", error);
-    return []; // In case of error, return an empty list
-  }
-}
+let works = [];
+const filterContainer = document.querySelector(".filter-container");
 
 // Function to create a work element
 function createWorkElement(work) {
@@ -23,12 +14,26 @@ function createWorkElement(work) {
     <img src="${work.imageUrl}" alt="${work.title}">
     <figcaption>${work.title}</figcaption>
   `;
-
   return workElement;
 }
 
+//Fetch categories and projects
+async function fetchWorks() {
+  try {
+    const response = await fetch("http://localhost:5678/api/works");
+    if (!response.ok)
+      throw new Error("Erreur lors de la récupération des travaux");
+    works = await response.json();
+    return works;
+  } catch (error) {
+    console.error("Erreur", error);
+    works = []; // In case of error, return an empty list
+    return works;
+  }
+}
+
 // Function to display works in the gallery
-function displayWorks(works, sectionGallery) {
+function displayWorks() {
   sectionGallery.innerHTML = ""; // Clear previous works
   works.forEach((work) => {
     const workElement = createWorkElement(work);
@@ -37,20 +42,20 @@ function displayWorks(works, sectionGallery) {
 }
 
 // Function to initialize the gallery
-async function initGallery(sectionGallery) {
-  const works = await fetchWorks();
-  displayWorks(works, sectionGallery);
-  setupFilters(works);
+async function initGallery() {
+  await fetchWorks();
+  displayWorks();
+  setupFilters();
 }
 
 // ****** Filters ****** //
+//////////////////////////
 
 // Function to setup filters
-async function setupFilters(works) {
-  const filterContainer = document.querySelector(".filter-container");
+async function setupFilters() {
   const categories = await fetchCategories();
-  categoryFilter(categories, filterContainer);
-  addCategoryListener(works);
+  categoryFilter(categories);
+  addCategoryListener();
 }
 
 // Function to fetch filter by categories
@@ -67,7 +72,7 @@ async function fetchCategories() {
 }
 
 // Function to create filter buttons
-function categoryFilter(categories, filterContainer) {
+function categoryFilter(categories) {
   filterContainer.innerHTML = ""; // Clear previous buttons
 
   // Create "Tous" button
@@ -93,7 +98,7 @@ function createButtonFilter(category, filterContainer) {
 }
 
 // Function to add listeners to filter buttons
-function addCategoryListener(works) {
+function addCategoryListener() {
   const buttons = document.querySelectorAll(".filter-button");
   buttons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -101,18 +106,34 @@ function addCategoryListener(works) {
         button.classList.remove("filteractive-button");
       });
       button.classList.add("filteractive-button");
-      filterWorks(button.dataset.categoryId, works);
+      filterWorks(button.dataset.categoryId);
     });
   });
 }
 
 // Function to filter works based on category
-function filterWorks(categoryId, works) {
+function filterWorks(categoryId) {
   const sectionGallery = document.querySelector(".gallery");
-  const filteredWorks = works.filter((work) =>
-    categoryId === "0" ? true : work.category.id === parseInt(categoryId)
-  );
-  displayWorks(filteredWorks, sectionGallery);
+  let filteredWorks;
+
+  // Check if "Tous" is selected (ID = 0)
+  if (categoryId === "0") {
+    filteredWorks = works; // Show all works
+  } else {
+    filteredWorks = works.filter(
+      (work) => work.category.id === parseInt(categoryId)
+    );
+  }
+
+  displayFilteredWorks(filteredWorks, sectionGallery);
+}
+
+function displayFilteredWorks(filteredWorks, sectionGallery) {
+  sectionGallery.innerHTML = ""; // Clear the gallery before displaying filtered works
+  filteredWorks.forEach((work) => {
+    const workElement = createWorkElement(work);
+    sectionGallery.appendChild(workElement);
+  });
 }
 
 // Intialisation
