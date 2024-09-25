@@ -23,12 +23,13 @@ async function fetchWorks() {
     const response = await fetch("http://localhost:5678/api/works");
     if (!response.ok)
       throw new Error("Erreur lors de la récupération des travaux");
-    works = await response.json();
-    return works;
+    return (works = await response.json());
+    //return works;
+    //return await response.json();
   } catch (error) {
     console.error("Erreur", error);
-    works = []; // In case of error, return an empty list
-    return works;
+    //works = []; // In case of error, return an empty list
+    return [];
   }
 }
 
@@ -359,17 +360,57 @@ returnModalGallery();
 //function closeAddworkModal
 function closeAddWorkModal() {
   const xmarkAddWork = document.querySelector(".close-workmodal");
-  const closeAddWorkModal = document.querySelector(".container-modals");
+  const containerModals = document.querySelector(".container-modals");
+  const addWorkModal = document.querySelector(".modal-addwork");
   const validationButton = document.querySelector("#addwork-validation");
 
-  xmarkAddWork.addEventListener("click", (e) => {
-    closeAddWorkModal.style.display = "none";
+  xmarkAddWork.addEventListener("click", () => {
+    containerModals.style.display = "none";
+    resetForm();
   });
 
-  validationButton.addEventListener("click", (e) => {
-    closeAddWorkModal.style.display = "none";
+  containerModals.addEventListener("click", (e) => {
+    if (!addWorkModal.contains(e.target) && e.target !== addWorkModal) {
+      containerModals.style.display = "none";
+      resetForm();
+    }
+  });
+
+  validationButton.addEventListener("click", () => {
+    if (validationButton.classList.contains("valid")) {
+      containerModals.style.display = "none";
+    }
+  });
+
+  verifFormCompleted();
+}
+
+//Verification form completed
+function verifFormCompleted() {
+  const buttonValidationForm = document.querySelector("#addwork-validation");
+  const form = document.querySelector("#form-addwork");
+  const titleForm = document.querySelector("#addwork-title");
+  const categoryForm = document.querySelector("#addwork-category");
+  const inputFile = document.querySelector("#addpicture-file");
+
+  buttonValidationForm.classList.remove("valid");
+
+  form.addEventListener("input", () => {
+    if (
+      titleForm.value.trim() !== "" &&
+      categoryForm.value !== "" &&
+      inputFile.files.length > 0
+    ) {
+      buttonValidationForm.classList.add("valid");
+      buttonValidationForm.disabled = false;
+    } else {
+      buttonValidationForm.classList.remove("valid");
+      buttonValidationForm.disabled = true;
+    }
   });
 }
+
+verifFormCompleted();
 
 closeAddWorkModal();
 
@@ -414,6 +455,12 @@ function hideFileElements() {
   formatImage.style.display = "none";
 }
 
+function showFileElements() {
+  labelFile.style.display = "block";
+  iconFile.style.display = "block";
+  formatImage.style.display = "block";
+}
+
 // Image loading
 function handleFileChange() {
   const file = inputFile.files[0];
@@ -450,10 +497,10 @@ const sectionForm = document.querySelector("#form-addwork");
 //Function add work in the gallery
 function addWorkPost() {
   const form = document.querySelector(".modal-addwork form");
-  /*const titleWork = document.querySelector("#addwork-title");
+  const titleWork = document.querySelector("#addwork-title");
   const categoryWork = document.querySelector("#addwork-category");
   const fileInput = document.querySelector("#addpicture-file");
-  const modal = document.querySelector(".modal-addwork");*/
+  const modal = document.querySelector(".modal-addwork");
   const errorDisplay = document.querySelector(".error-message");
   const successDisplay = document.querySelector(".success-message");
 
@@ -477,41 +524,44 @@ function addWorkPost() {
         console.log("Ajout réussi:", data);
 
         alert("Ajout du projet réussi!");
-        resetForm();
-
         await refreshGalleries();
+        resetForm();
       }
     } catch (error) {
       showErrorMessage("Une erreur s'est produite. Veuillez réessayer.");
+      resetForm();
     }
   });
 }
 
-// Reset form addwork
 function resetForm() {
-  const form = document.querySelector(".modal-addwork form"); // Sélection du formulaire
-  form.reset(); // Réinitialise tous les champs du formulaire
-
-  // Réinitialise l'input file séparément car `form.reset()` ne le fait pas pour le fichier
-  //inputFile.value = "";
-  inputFile.style.display = "none";
-
-  // Si tu as un aperçu d'image, tu peux également vouloir le réinitialiser
+  const form = document.querySelector("#form-addwork");
+  const buttonValidationForm = document.querySelector("#addwork-validation");
   const imgPreview = document.querySelector(".container-picture img");
-  if (imgPreview) {
-    imgPreview.src = "#"; // Réinitialise l'aperçu de l'image
-  }
+
+  // Réinitialiser les champs du formulaire
+  form.reset();
+
+  // Effacer l'aperçu de l'image
+  showFileElements();
+  imgPreview.style.display = "none";
+
+  // Désactiver le bouton "Valider" et retirer la classe 'valid'
+  buttonValidationForm.classList.remove("valid");
+  buttonValidationForm.disabled = true;
 }
 
+addWorkPost();
+
 // Function to show error message
-function showErrorMessage() {
+/*function showErrorMessage() {
   const errorElement = document.querySelector(".alert");
   const alertMessage = errorElement.querySelector(".alert-message");
 
   alertMessage.textContent = message;
 
   errorElement.classList.add("show");
-}
+}*/
 
 // Function to hide error message
 /*function hideErrorMessage() {
@@ -527,30 +577,3 @@ form.addEventListener("submit", addWorkPost);
 document
   .querySelector(".button-closealert")
   .addEventListener("click", hideErrorMessage);*/
-
-addWorkPost();
-
-//Verification form completed
-function verifFormCompleted() {
-  const buttonValidationForm = document.querySelector("#addwork-validation");
-  const form = document.querySelector("#form-addwork");
-  const titleForm = document.querySelector("#addwork-title");
-  const categoryForm = document.querySelector("#addwork-category");
-  const inputFile = document.querySelector("#addpicture-file");
-
-  form.addEventListener("input", () => {
-    if (
-      titleForm.value.trim() !== "" &&
-      categoryForm.value !== "" &&
-      inputFile.files.length > 0
-    ) {
-      buttonValidationForm.classList.add("valid");
-      buttonValidationForm.disabled = false;
-    } else {
-      buttonValidationForm.classList.remove("valid");
-      buttonValidationForm.disabled = true;
-    }
-  });
-}
-
-verifFormCompleted();
