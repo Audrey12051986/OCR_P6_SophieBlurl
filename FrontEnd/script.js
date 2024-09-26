@@ -316,7 +316,8 @@ async function deleteWorksModal() {
 deleteWorksModal();
 
 //Refresh galleries modal and website
-async function refreshGalleries() {
+async function refreshGalleries(event) {
+  event.preventDefault();
   const sectionGallery = document.querySelector(".gallery");
 
   await initGallery(sectionGallery);
@@ -528,7 +529,7 @@ function addWorkPost() {
         resetForm();
       }
     } catch (error) {
-      showErrorMessage("Une erreur s'est produite. Veuillez réessayer.");
+      lert("Une erreur s'est produite. Veuillez réessayer.");
       resetForm();
     }
   });
@@ -552,28 +553,3 @@ function resetForm() {
 }
 
 addWorkPost();
-
-// Function to show error message
-/*function showErrorMessage() {
-  const errorElement = document.querySelector(".alert");
-  const alertMessage = errorElement.querySelector(".alert-message");
-
-  alertMessage.textContent = message;
-
-  errorElement.classList.add("show");
-}*/
-
-// Function to hide error message
-/*function hideErrorMessage() {
-  const errorElement = document.querySelector(".alert");
-  errorElement.classList.remove("show");
-}
-
-// Add event listener to form submit
-const form = document.getElementById("form-addwork");
-form.addEventListener("submit", addWorkPost);
-
-// Add event listener to close alert button
-document
-  .querySelector(".button-closealert")
-  .addEventListener("click", hideErrorMessage);*/

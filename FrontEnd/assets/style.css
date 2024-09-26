@@ -670,6 +670,11 @@ hr {
   background-color: var(--main-button-color);
 }
 
+.addwork-error {
+  display: none;
+  color: var(--text-alert-color);
+}
+
 /*.message-container {
   margin-bottom: 10px;
 }
