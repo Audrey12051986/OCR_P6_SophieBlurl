@@ -1,3 +1,4 @@
+////////////////////////////
 // ****** Gallery ****** //
 //////////////////////////
 
@@ -49,6 +50,7 @@ async function initGallery() {
   setupFilters();
 }
 
+////////////////////////////
 // ****** Filters ****** //
 //////////////////////////
 
@@ -129,6 +131,7 @@ function filterWorks(categoryId) {
   displayFilteredWorks(filteredWorks, sectionGallery);
 }
 
+//Function display filters
 function displayFilteredWorks(filteredWorks, sectionGallery) {
   sectionGallery.innerHTML = ""; // Clear the gallery before displaying filtered works
   filteredWorks.forEach((work) => {
@@ -142,8 +145,11 @@ const sectionGallery = document.querySelector(".gallery");
 initGallery(sectionGallery);
 adminUserMode();
 
+///////////////////////////////
 // ****** Admin Mode ****** //
+/////////////////////////////
 
+// Function mode admin user
 function adminUserMode() {
   const token = sessionStorage.getItem("token");
 
@@ -155,6 +161,7 @@ function adminUserMode() {
   }
 }
 
+//Function for hide filters
 function hideFilters() {
   const filterElement = document.querySelector(".filter-container");
   if (filterElement) {
@@ -162,6 +169,7 @@ function hideFilters() {
   }
 }
 
+//Create button logout
 function configureLogoutButton() {
   const loginButton = document.querySelector("nav ul li:nth-child(3) a");
   let logoutButton = document.createElement("a");
@@ -172,11 +180,13 @@ function configureLogoutButton() {
   loginButton.remove();
 }
 
+// Close mode admin user
 function handleLogout() {
   sessionStorage.removeItem("token");
   window.location.href = "index.html";
 }
 
+//Create configuration logout
 function createAdminMenu() {
   const body = document.querySelector("body");
   const topMenu = document.createElement("div");
@@ -186,6 +196,7 @@ function createAdminMenu() {
   body.insertAdjacentElement("afterbegin", topMenu);
 }
 
+//Creattion the button edit
 function addEditButtons() {
   const sectionsToEdit = document.querySelector(".edit-mode");
   const editIcon = document.createElement("i");
@@ -198,7 +209,9 @@ function addEditButtons() {
   elementReference.parentNode.insertBefore(span, elementReference.nextSibling);
 }
 
+//////////////////////////
 // ****** Modal ****** //
+////////////////////////
 
 //Open modal gallery
 async function openGalleryModal() {
@@ -223,19 +236,20 @@ openGalleryModal();
 function closeGalleryModal() {
   const xmarkClose = document.querySelector(".close-modal");
   const containerModals = document.querySelector(".container-modals");
-  const galleryModal = document.querySelector(".modal-gallery");
 
   xmarkClose.addEventListener("click", () => {
     containerModals.style.display = "none";
   });
 
   containerModals.addEventListener("click", (e) => {
-    if (!galleryModal.contains(e.target) && e.target !== galleryModal) {
+    e.preventDefault();
+    e.stopPropagation();
+    const target = e.target;
+    if (target.classList.contains("container-modals")) {
       containerModals.style.display = "none";
     }
   });
 }
-
 closeGalleryModal();
 
 // Create Element for modal gallery
@@ -269,7 +283,6 @@ async function displayWorksModal() {
 
   deleteWorksModal();
 }
-
 displayWorksModal();
 
 //Delete works in modal gallery
@@ -284,6 +297,8 @@ async function deleteWorksModal() {
 
   trashAll.forEach((trash) => {
     trash.addEventListener("click", async (e) => {
+      e.preventDefault();
+
       const workId = trash.id;
       const fetchDelete = await fetch(
         `http://localhost:5678/api/works/${workId}`,
@@ -312,12 +327,10 @@ async function deleteWorksModal() {
     });
   });
 }
-
-deleteWorksModal();
+//deleteWorksModal();
 
 //Refresh galleries modal and website
-async function refreshGalleries(event) {
-  event.preventDefault();
+async function refreshGalleries() {
   const sectionGallery = document.querySelector(".gallery");
 
   await initGallery(sectionGallery);
@@ -338,7 +351,6 @@ function openAddworkModal() {
     galleryModal.style.display = "none";
   });
 }
-
 openAddworkModal();
 
 //Return from modal addWork to modal gallery
@@ -353,9 +365,9 @@ function returnModalGallery() {
     containerModals.style.display = "flex";
     galleryModal.style.display = "flex";
     addWorkModal.style.display = "none";
+    resetForm();
   });
 }
-
 returnModalGallery();
 
 //function closeAddworkModal
@@ -364,25 +376,22 @@ function closeAddWorkModal() {
   const containerModals = document.querySelector(".container-modals");
   const addWorkModal = document.querySelector(".modal-addwork");
   const validationButton = document.querySelector("#addwork-validation");
+  const galleryModal = document.querySelector(".modal-gallery");
 
   xmarkAddWork.addEventListener("click", () => {
-    containerModals.style.display = "none";
+    addWorkModal.style.display = "none";
+    galleryModal.style.display = "flex";
     resetForm();
-  });
-
-  containerModals.addEventListener("click", (e) => {
-    if (!addWorkModal.contains(e.target) && e.target !== addWorkModal) {
-      containerModals.style.display = "none";
-      resetForm();
-    }
   });
 
   validationButton.addEventListener("click", () => {
     if (validationButton.classList.contains("valid")) {
-      containerModals.style.display = "none";
+      addWorkModal.style.display = "none";
+      galleryModal.style.display = "flex";
+      resetForm();
+      //refreshGalleries();
     }
   });
-
   verifFormCompleted();
 }
 
@@ -410,9 +419,7 @@ function verifFormCompleted() {
     }
   });
 }
-
 verifFormCompleted();
-
 closeAddWorkModal();
 
 // Prevent closing on click on form
@@ -456,6 +463,7 @@ function hideFileElements() {
   formatImage.style.display = "none";
 }
 
+// Show image elements
 function showFileElements() {
   labelFile.style.display = "block";
   iconFile.style.display = "block";
@@ -498,12 +506,6 @@ const sectionForm = document.querySelector("#form-addwork");
 //Function add work in the gallery
 function addWorkPost() {
   const form = document.querySelector(".modal-addwork form");
-  const titleWork = document.querySelector("#addwork-title");
-  const categoryWork = document.querySelector("#addwork-category");
-  const fileInput = document.querySelector("#addpicture-file");
-  const modal = document.querySelector(".modal-addwork");
-  const errorDisplay = document.querySelector(".error-message");
-  const successDisplay = document.querySelector(".success-message");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -511,30 +513,32 @@ function addWorkPost() {
     const formData = new FormData(form);
     const token = sessionStorage.getItem("token");
 
-    try {
-      const fetchPost = await fetch(`http://localhost:5678/api/works`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
+    const fetchPost = await fetch(`http://localhost:5678/api/works`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
 
-      if (fetchPost.ok) {
-        const data = await fetchPost.json();
-        console.log("Ajout réussi:", data);
+    if (fetchPost.ok) {
+      const data = await fetchPost.json();
+      console.log("Ajout réussi:", data);
 
-        alert("Ajout du projet réussi!");
-        await refreshGalleries();
-        resetForm();
-      }
-    } catch (error) {
-      lert("Une erreur s'est produite. Veuillez réessayer.");
+      alert("Ajout du projet réussi!");
+      //await initGallery(sectionGallery);
+      //await displayWorksModal();
       resetForm();
+    }
+
+    if (!fetchPost.ok) {
+      alert("L'ajout du projet a échoué, veuillez ré-essayer.");
     }
   });
 }
+addWorkPost();
 
+// Create the reset of form
 function resetForm() {
   const form = document.querySelector("#form-addwork");
   const buttonValidationForm = document.querySelector("#addwork-validation");
@@ -551,5 +555,3 @@ function resetForm() {
   buttonValidationForm.classList.remove("valid");
   buttonValidationForm.disabled = true;
 }
-
-addWorkPost();
