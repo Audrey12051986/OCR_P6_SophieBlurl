@@ -1,4 +1,3 @@
-////////////////////////////
 // ****** Gallery ****** //
 //////////////////////////
 
@@ -50,7 +49,6 @@ async function initGallery() {
   setupFilters();
 }
 
-////////////////////////////
 // ****** Filters ****** //
 //////////////////////////
 
@@ -131,7 +129,6 @@ function filterWorks(categoryId) {
   displayFilteredWorks(filteredWorks, sectionGallery);
 }
 
-//Function display filters
 function displayFilteredWorks(filteredWorks, sectionGallery) {
   sectionGallery.innerHTML = ""; // Clear the gallery before displaying filtered works
   filteredWorks.forEach((work) => {
@@ -145,11 +142,8 @@ const sectionGallery = document.querySelector(".gallery");
 initGallery(sectionGallery);
 adminUserMode();
 
-///////////////////////////////
 // ****** Admin Mode ****** //
-/////////////////////////////
 
-// Function mode admin user
 function adminUserMode() {
   const token = sessionStorage.getItem("token");
 
@@ -161,7 +155,6 @@ function adminUserMode() {
   }
 }
 
-//Function for hide filters
 function hideFilters() {
   const filterElement = document.querySelector(".filter-container");
   if (filterElement) {
@@ -169,7 +162,6 @@ function hideFilters() {
   }
 }
 
-//Create button logout
 function configureLogoutButton() {
   const loginButton = document.querySelector("nav ul li:nth-child(3) a");
   let logoutButton = document.createElement("a");
@@ -180,13 +172,11 @@ function configureLogoutButton() {
   loginButton.remove();
 }
 
-// Close mode admin user
 function handleLogout() {
   sessionStorage.removeItem("token");
   window.location.href = "index.html";
 }
 
-//Create configuration logout
 function createAdminMenu() {
   const body = document.querySelector("body");
   const topMenu = document.createElement("div");
@@ -196,7 +186,6 @@ function createAdminMenu() {
   body.insertAdjacentElement("afterbegin", topMenu);
 }
 
-//Creattion the button edit
 function addEditButtons() {
   const sectionsToEdit = document.querySelector(".edit-mode");
   const editIcon = document.createElement("i");
@@ -209,9 +198,7 @@ function addEditButtons() {
   elementReference.parentNode.insertBefore(span, elementReference.nextSibling);
 }
 
-//////////////////////////
 // ****** Modal ****** //
-////////////////////////
 
 //Open modal gallery
 async function openGalleryModal() {
@@ -236,6 +223,7 @@ openGalleryModal();
 function closeGalleryModal() {
   const xmarkClose = document.querySelector(".close-modal");
   const containerModals = document.querySelector(".container-modals");
+  const galleryModal = document.querySelector(".modal-gallery");
 
   xmarkClose.addEventListener("click", () => {
     containerModals.style.display = "none";
@@ -250,6 +238,7 @@ function closeGalleryModal() {
     }
   });
 }
+
 closeGalleryModal();
 
 // Create Element for modal gallery
@@ -283,6 +272,7 @@ async function displayWorksModal() {
 
   deleteWorksModal();
 }
+
 displayWorksModal();
 
 //Delete works in modal gallery
@@ -327,10 +317,12 @@ async function deleteWorksModal() {
     });
   });
 }
+
 //deleteWorksModal();
 
 //Refresh galleries modal and website
-async function refreshGalleries() {
+async function refreshGalleries(event) {
+  event.preventDefault();
   const sectionGallery = document.querySelector(".gallery");
 
   await initGallery(sectionGallery);
@@ -351,6 +343,7 @@ function openAddworkModal() {
     galleryModal.style.display = "none";
   });
 }
+
 openAddworkModal();
 
 //Return from modal addWork to modal gallery
@@ -368,6 +361,7 @@ function returnModalGallery() {
     resetForm();
   });
 }
+
 returnModalGallery();
 
 //function closeAddworkModal
@@ -380,18 +374,29 @@ function closeAddWorkModal() {
 
   xmarkAddWork.addEventListener("click", () => {
     addWorkModal.style.display = "none";
-    galleryModal.style.display = "flex";
+    galleryModal.style.display = "flex"; // Changé de "block" à "flex"
     resetForm();
   });
 
   validationButton.addEventListener("click", () => {
     if (validationButton.classList.contains("valid")) {
       addWorkModal.style.display = "none";
-      galleryModal.style.display = "flex";
+      galleryModal.style.display = "flex"; // Changé de "block" à "flex"
       resetForm();
-      //refreshGalleries();
     }
   });
+
+  /*containerModals.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const target = e.target;
+    if (target.classList.contains("container-modals")) {
+      addWorkModal.style.display = "none";
+      galleryModal.style.display = "block";
+      resetForm();
+    }
+  });*/
+
   verifFormCompleted();
 }
 
@@ -419,7 +424,9 @@ function verifFormCompleted() {
     }
   });
 }
+
 verifFormCompleted();
+
 closeAddWorkModal();
 
 // Prevent closing on click on form
@@ -526,8 +533,7 @@ function addWorkPost() {
       console.log("Ajout réussi:", data);
 
       alert("Ajout du projet réussi!");
-      //await initGallery(sectionGallery);
-      //await displayWorksModal();
+      await refreshGalleries();
       resetForm();
     }
 
