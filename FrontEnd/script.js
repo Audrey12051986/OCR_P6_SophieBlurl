@@ -550,10 +550,11 @@ async function addWorkPost() {
     if (fetchPost.ok) {
       const data = await fetchPost.json();
       console.log("Ajout réussi:", data);
+      resetForm();
+
+      await refreshGalleries();
 
       alert("Ajout du projet réussi!");
-      await refreshGalleries();
-      resetForm();
     }
 
     if (!fetchPost.ok) {
