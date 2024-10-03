@@ -1,10 +1,12 @@
+////////////////////////////
 // ****** Gallery ****** //
 //////////////////////////
 
 let works = [];
 const filterContainer = document.querySelector(".filter-container");
+const sectionGallery = document.querySelector(".gallery");
 
-// Function to create a work element
+//Create a work element
 function createWorkElement(work) {
   const workElement = document.createElement("figure");
   workElement.dataset.category = work.category.name;
@@ -24,31 +26,29 @@ async function fetchWorks() {
     if (!response.ok)
       throw new Error("Erreur lors de la récupération des travaux");
     return (works = await response.json());
-    //return works;
-    //return await response.json();
   } catch (error) {
     console.error("Erreur", error);
-    //works = []; // In case of error, return an empty list
     return [];
   }
 }
 
-// Function to display works in the gallery
+//Display works in the gallery
 function displayWorks() {
-  sectionGallery.innerHTML = ""; // Clear previous works
+  sectionGallery.innerHTML = "";
   works.forEach((work) => {
     const workElement = createWorkElement(work);
     sectionGallery.appendChild(workElement);
   });
 }
 
-// Function to initialize the gallery
+//Initialize the gallery
 async function initGallery() {
   await fetchWorks();
   displayWorks();
   setupFilters();
 }
 
+////////////////////////////
 // ****** Filters ****** //
 //////////////////////////
 
@@ -74,7 +74,7 @@ async function fetchCategories() {
 
 // Function to create filter buttons
 function categoryFilter(categories) {
-  filterContainer.innerHTML = ""; // Clear previous buttons
+  filterContainer.innerHTML = "";
 
   // Create "Tous" button
   const allButton = document.createElement("button");
@@ -89,7 +89,7 @@ function categoryFilter(categories) {
   });
 }
 
-// Function to create a single filter button
+// Create button filters with category.id
 function createButtonFilter(category, filterContainer) {
   const button = document.createElement("button");
   button.innerText = category.name;
@@ -98,7 +98,7 @@ function createButtonFilter(category, filterContainer) {
   filterContainer.appendChild(button);
 }
 
-// Function to add listeners to filter buttons
+// Add listeners to filter buttons
 function addCategoryListener() {
   const buttons = document.querySelectorAll(".filter-button");
   buttons.forEach((button) => {
@@ -112,14 +112,13 @@ function addCategoryListener() {
   });
 }
 
-// Function to filter works based on category
+// Filter works based on category
 function filterWorks(categoryId) {
-  const sectionGallery = document.querySelector(".gallery");
   let filteredWorks;
 
   // Check if "Tous" is selected (ID = 0)
   if (categoryId === "0") {
-    filteredWorks = works; // Show all works
+    filteredWorks = works;
   } else {
     filteredWorks = works.filter(
       (work) => work.category.id === parseInt(categoryId)
@@ -129,8 +128,9 @@ function filterWorks(categoryId) {
   displayFilteredWorks(filteredWorks, sectionGallery);
 }
 
+//Display filters
 function displayFilteredWorks(filteredWorks, sectionGallery) {
-  sectionGallery.innerHTML = ""; // Clear the gallery before displaying filtered works
+  sectionGallery.innerHTML = "";
   filteredWorks.forEach((work) => {
     const workElement = createWorkElement(work);
     sectionGallery.appendChild(workElement);
@@ -138,12 +138,14 @@ function displayFilteredWorks(filteredWorks, sectionGallery) {
 }
 
 // Intialisation
-const sectionGallery = document.querySelector(".gallery");
 initGallery(sectionGallery);
 adminUserMode();
 
+///////////////////////////////
 // ****** Admin Mode ****** //
+/////////////////////////////
 
+//Create mode admin user
 function adminUserMode() {
   const token = sessionStorage.getItem("token");
 
@@ -155,6 +157,7 @@ function adminUserMode() {
   }
 }
 
+//Function for hide filters
 function hideFilters() {
   const filterElement = document.querySelector(".filter-container");
   if (filterElement) {
@@ -162,6 +165,7 @@ function hideFilters() {
   }
 }
 
+//Create button logout
 function configureLogoutButton() {
   const loginButton = document.querySelector("nav ul li:nth-child(3) a");
   let logoutButton = document.createElement("a");
@@ -172,11 +176,13 @@ function configureLogoutButton() {
   loginButton.remove();
 }
 
+//Close mode admin user
 function handleLogout() {
   sessionStorage.removeItem("token");
   window.location.href = "index.html";
 }
 
+//Create configuration logout
 function createAdminMenu() {
   const body = document.querySelector("body");
   const topMenu = document.createElement("div");
@@ -186,6 +192,7 @@ function createAdminMenu() {
   body.insertAdjacentElement("afterbegin", topMenu);
 }
 
+//Creation the button edit
 function addEditButtons() {
   const sectionsToEdit = document.querySelector(".edit-mode");
   const editIcon = document.createElement("i");
@@ -198,7 +205,9 @@ function addEditButtons() {
   elementReference.parentNode.insertBefore(span, elementReference.nextSibling);
 }
 
+//////////////////////////
 // ****** Modal ****** //
+////////////////////////
 
 //Open modal gallery
 async function openGalleryModal() {
@@ -233,7 +242,10 @@ function closeGalleryModal() {
     e.preventDefault();
     e.stopPropagation();
     const target = e.target;
-    if (target.classList.contains("container-modals")) {
+    if (
+      galleryModal.style.display !== "none" &&
+      target.classList.contains("container-modals")
+    ) {
       containerModals.style.display = "none";
     }
   });
@@ -321,10 +333,14 @@ async function deleteWorksModal() {
 //deleteWorksModal();
 
 //Refresh galleries modal and website
-async function refreshGalleries(event) {
-  event.preventDefault();
-  const sectionGallery = document.querySelector(".gallery");
+/*async function refreshGalleries(event) {
+  //event.preventDefault();
 
+  await initGallery(sectionGallery);
+  await displayWorksModal();
+}*/
+
+async function refreshGalleries() {
   await initGallery(sectionGallery);
   await displayWorksModal();
 }
@@ -354,7 +370,7 @@ function returnModalGallery() {
   const containerModals = document.querySelector(".container-modals");
 
   arrowLeft.addEventListener("click", (e) => {
-    e.stopPropagation(); // Empêcher la propagation du clic
+    e.stopPropagation();
     containerModals.style.display = "flex";
     galleryModal.style.display = "flex";
     addWorkModal.style.display = "none";
@@ -374,28 +390,26 @@ function closeAddWorkModal() {
 
   xmarkAddWork.addEventListener("click", () => {
     addWorkModal.style.display = "none";
-    galleryModal.style.display = "flex"; // Changé de "block" à "flex"
+    galleryModal.style.display = "flex";
     resetForm();
   });
 
-  validationButton.addEventListener("click", () => {
-    if (validationButton.classList.contains("valid")) {
-      addWorkModal.style.display = "none";
-      galleryModal.style.display = "flex"; // Changé de "block" à "flex"
-      resetForm();
-    }
-  });
+  validationButton.addEventListener("click", () => {});
 
-  /*containerModals.addEventListener("click", (e) => {
+  containerModals.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
     const target = e.target;
-    if (target.classList.contains("container-modals")) {
+
+    if (
+      addWorkModal.style.display !== "none" &&
+      target.classList.contains("container-modals")
+    ) {
       addWorkModal.style.display = "none";
-      galleryModal.style.display = "block";
+      galleryModal.style.display = "flex";
       resetForm();
     }
-  });*/
+  });
 
   verifFormCompleted();
 }
@@ -472,9 +486,9 @@ function hideFileElements() {
 
 // Show image elements
 function showFileElements() {
-  labelFile.style.display = "block";
-  iconFile.style.display = "block";
-  formatImage.style.display = "block";
+  labelFile.style.display = "flex";
+  iconFile.style.display = "flex";
+  formatImage.style.display = "flex";
 }
 
 // Image loading
@@ -510,12 +524,17 @@ categoriesListModal();
 
 const sectionForm = document.querySelector("#form-addwork");
 
-//Function add work in the gallery
-function addWorkPost() {
+//Add work in the gallery
+async function addWorkPost() {
   const form = document.querySelector(".modal-addwork form");
+  const addWorkModal = document.querySelector(".modal-addwork");
+  const validationButton = document.querySelector("#addwork-validation");
+  const galleryModal = document.querySelector(".modal-gallery");
+  console.log("ok", form);
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    console.log("bug");
 
     const formData = new FormData(form);
     const token = sessionStorage.getItem("token");
@@ -538,8 +557,12 @@ function addWorkPost() {
     }
 
     if (!fetchPost.ok) {
-      alert("L'ajout du projet a échoué, veuillez ré-essayer.");
+      //alert("L'ajout du projet a échoué, veuillez ré-essayer.");
+      resetForm();
     }
+
+    addWorkModal.style.display = "none";
+    galleryModal.style.display = "flex";
   });
 }
 addWorkPost();
