@@ -293,7 +293,7 @@ async function deleteWorksModal() {
   const token = sessionStorage.getItem("token");
 
   if (!token) {
-    console.error("Vous n'^tes pas autoriser à supprimer les projets");
+    console.error("Vous n'êtes pas autoriser à supprimer les projets");
     return;
   }
 
@@ -330,16 +330,7 @@ async function deleteWorksModal() {
   });
 }
 
-//deleteWorksModal();
-
-//Refresh galleries modal and website
-/*async function refreshGalleries(event) {
-  //event.preventDefault();
-
-  await initGallery(sectionGallery);
-  await displayWorksModal();
-}*/
-
+//Refresh gallery
 async function refreshGalleries() {
   await initGallery(sectionGallery);
   await displayWorksModal();
@@ -528,13 +519,10 @@ const sectionForm = document.querySelector("#form-addwork");
 async function addWorkPost() {
   const form = document.querySelector(".modal-addwork form");
   const addWorkModal = document.querySelector(".modal-addwork");
-  const validationButton = document.querySelector("#addwork-validation");
   const galleryModal = document.querySelector(".modal-gallery");
-  console.log("ok", form);
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    console.log("bug");
 
     const formData = new FormData(form);
     const token = sessionStorage.getItem("token");
@@ -553,12 +541,9 @@ async function addWorkPost() {
       resetForm();
 
       await refreshGalleries();
-
-      alert("Ajout du projet réussi!");
     }
 
     if (!fetchPost.ok) {
-      //alert("L'ajout du projet a échoué, veuillez ré-essayer.");
       resetForm();
     }
 
