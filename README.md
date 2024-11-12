@@ -1,8 +1,20 @@
-# Portfolio-architecte-sophie-bluel
+# Portfolio-architecte-sophie-bluel - page web dynamique avec Javascripte
 
-Code du projet 6 d'intégrateur web.
+## Description
+Ce projet consiste à la création d'un portfolio pour une architecte Sophie Bluel. Le site intègre une page grand public et une page login pour l'architect pour la mise à jour de ses projets.
 
-## Information pour le lancer le code
+## Langages utilisés
+- HTML : Structure  de base du site
+- CSS : style du site
+- Javascript : 
 
- - Lancer le backend depuis votre terminal en suivant les instruction du fichier ReadMe.
- - Si vous désirez afficher le code du backend et du frontend, faites le dans 2 instances de VSCode différentes pour éviter tout problème
+## Fonctionnalités : choix du développement
+- HTML :
+     - une page login
+     - une page structurelle du site
+- CSS : mise en forme  de la page login et de la page du site
+- JS :
+    - Une fonction par action
+    - Une partie pour la gestion dynamique de la galerie
+    - Une partie pour le mode administrateur
+    - une partie pour la gestion des modales : ajout projets, fermetures des modales
