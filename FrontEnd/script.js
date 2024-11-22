@@ -53,13 +53,6 @@ async function initGallery() {
 //////////////////////////
 
 // Function to setup filters
-/*async function setupFilters() {
-  const categories = await fetchCategories();
-  categoryFilter(categories);
-  addCategoryListener();
-}*/
-
-// Function to setup filters
 async function setupFilters() {
   // Récupère les catégories depuis le localStorage
   const categories = await fetchCategories();
@@ -68,19 +61,6 @@ async function setupFilters() {
   categoryFilter(categories);
   addCategoryListener();
 }
-
-// Function to fetch filter by categories
-/*async function fetchCategories() {
-  try {
-    const response = await fetch("http://localhost:5678/api/categories");
-    if (!response.ok)
-      throw new Error("Erreur lors de la récupération des catégories");
-    return await response.json();
-  } catch (error) {
-    console.error("Erreur", error);
-    return [];
-  }
-}*/
 
 // Fonction pour récupérer les catégories (soit depuis l'API, soit depuis le localStorage)
 async function fetchCategories() {
@@ -336,7 +316,6 @@ async function deleteWorksModal() {
   const token = sessionStorage.getItem("token");
 
   if (!token) {
-    //console.error("Vous n'êtes pas autoriser à supprimer les projets");
     return;
   }
 
@@ -537,25 +516,6 @@ function handleFileChange() {
 
 // Écouteur d'événement pour détecter le changement de fichier
 inputFile.addEventListener("change", handleFileChange);
-
-//Creating a list of categories in select
-/*async function categoriesListModal() {
-  const selectModal = document.querySelector("#addwork-category");
-  const categoryList = await fetchCategories();
-  const select = document.getElementById("addwork-category");
-
-  const emptyOption = document.createElement("option");
-  emptyOption.value = "";
-  select.appendChild(emptyOption);
-
-  categoryList.forEach((category) => {
-    const option = document.createElement("option");
-    option.value = category.id;
-    option.textContent = category.name;
-    selectModal.appendChild(option);
-  });
-}
-categoriesListModal();*/
 
 // Fonction pour remplir la liste des catégories dans le select
 async function categoriesListModal() {
