@@ -60,10 +60,10 @@ async function initGallery() {
 }*/
 
 // Function to setup filters
-function setupFilters() {
+async function setupFilters() {
   // Récupère les catégories depuis le localStorage
-  const categories = JSON.parse(localStorage.getItem("categories")) || [];
-
+  const categories = await fetchCategories();
+  console.log(categories);
   // Applique les filtres avec les catégories
   categoryFilter(categories);
   addCategoryListener();
@@ -85,7 +85,7 @@ function setupFilters() {
 // Fonction pour récupérer les catégories (soit depuis l'API, soit depuis le localStorage)
 async function fetchCategories() {
   // Vérifie si les catégories sont déjà dans le localStorage
-  const storedCategories = localStorage.getItem("categories");
+  const storedCategories = sessionStorage.getItem("categories");
 
   if (storedCategories) {
     // Si oui, on les retourne directement
@@ -101,7 +101,7 @@ async function fetchCategories() {
     const categories = await response.json();
 
     // On sauvegarde les catégories dans le localStorage
-    localStorage.setItem("categories", JSON.stringify(categories));
+    sessionStorage.setItem("categories", JSON.stringify(categories));
 
     return categories;
   } catch (error) {
@@ -217,6 +217,7 @@ function configureLogoutButton() {
 //Close mode admin user
 function handleLogout() {
   sessionStorage.removeItem("token");
+  sessionStorage.removeItem("categories");
   window.location.href = "index.html";
 }
 
@@ -241,6 +242,8 @@ function addEditButtons() {
   span.classList.add("edit-button");
   span.textContent = " modifier";
   elementReference.parentNode.insertBefore(span, elementReference.nextSibling);
+  const button = document.querySelector(".edit-button");
+  button.addEventListener("click", () => openGalleryModal());
 }
 
 //////////////////////////
@@ -265,7 +268,8 @@ async function openGalleryModal() {
     console.error("L'élément editButton est introuvable.");
   }
 }
-openGalleryModal();
+
+//openGalleryModal();
 
 //Close modal gallery
 function closeGalleryModal() {
@@ -332,7 +336,7 @@ async function deleteWorksModal() {
   const token = sessionStorage.getItem("token");
 
   if (!token) {
-    console.error("Vous n'êtes pas autoriser à supprimer les projets");
+    //console.error("Vous n'êtes pas autoriser à supprimer les projets");
     return;
   }
 
@@ -387,6 +391,7 @@ function openAddworkModal() {
     containerModals.style.display = "flex";
     addWorkModal.style.display = "flex";
     galleryModal.style.display = "none";
+    categoriesListModal();
   });
 }
 
